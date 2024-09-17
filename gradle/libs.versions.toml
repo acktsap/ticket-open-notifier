@@ -1,0 +1,22 @@
+# format guide
+# https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
+
+[versions]
+junit = "5.+"
+assertj = "3.+"
+mockito = "5.+"
+mockk = "1.+"
+fixtureMonkey = "1.0.25"
+
+[libraries]
+junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
+assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+fixture-monkey = { module = "com.navercorp.fixturemonkey:fixture-monkey-starter", version.ref = "fixtureMonkey" }
+fixture-monkey-kotlin = { module = "com.navercorp.fixturemonkey:fixture-monkey-starter-kotlin", version.ref = "fixtureMonkey" }
+
+[bundles]
+test-java = ["junit", "assertj", "mockito", "fixture-monkey"]
+test-kotlin = ["junit", "assertj", "mockk", "fixture-monkey-kotlin"]
+
