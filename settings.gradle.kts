@@ -5,7 +5,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ticket-open-notification"
+rootProject.name = "ticket-open-notifier"
 
 include(
     "application",
