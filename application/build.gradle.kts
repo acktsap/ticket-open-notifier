@@ -10,6 +10,7 @@ application {
 }
 
 dependencies {
+    implementation(libs.selenium)
     implementation(libs.email.api)
     implementation(libs.email.implementation)
 

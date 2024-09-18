@@ -18,9 +18,9 @@ class GmailNotifier(
     override fun notify(ticketOpens: Collection<TicketOpen>) {
         val title = "티켓 오픈 알람 (${ticketOpens.size}개)"
         val content =
-            ticketOpens.sortedBy { it.date }
+            ticketOpens.sortedBy { it.dateTime }
                 .joinToString(separator = "\n") {
-                    "${it.date} ${it.name} ${it.platform}"
+                    "${it.dateTime} ${it.name} ${it.platform}"
                 }
         sendEmail(title, content)
     }

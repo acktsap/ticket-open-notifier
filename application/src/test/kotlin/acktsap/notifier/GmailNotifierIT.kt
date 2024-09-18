@@ -4,7 +4,7 @@ import acktsap.model.Platform
 import acktsap.model.TicketOpen
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 class GmailNotifierIT {
     @Disabled("Manual test")
@@ -16,12 +16,12 @@ class GmailNotifierIT {
                 TicketOpen(
                     name = "테스트 오픈1",
                     platform = Platform.INTERPARK,
-                    date = LocalDate.now(),
+                    dateTime = LocalDateTime.now(),
                 ),
                 TicketOpen(
                     name = "테스트 오픈2",
                     platform = Platform.INTERPARK,
-                    date = LocalDate.now().plusDays(2),
+                    dateTime = LocalDateTime.now().plusDays(2),
                 ),
             )
         val sut =

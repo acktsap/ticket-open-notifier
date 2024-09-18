@@ -1,10 +1,10 @@
 package acktsap.model
 
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class TicketOpen(
     val name: String,
     val platform: Platform,
     // in kst
-    val date: LocalDate,
+    val dateTime: LocalDateTime,
 )
