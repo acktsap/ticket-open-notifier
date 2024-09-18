@@ -10,5 +10,8 @@ application {
 }
 
 dependencies {
+    implementation(libs.email.api)
+    implementation(libs.email.implementation)
+
     testImplementation(libs.bundles.test.kotlin)
 }

@@ -2,6 +2,11 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
+# main
+emailApi = "2.1.3"
+emailApiImplementation = "2.0.3"
+
+# test
 junit = "5.+"
 assertj = "3.+"
 mockito = "5.+"
@@ -9,6 +14,11 @@ mockk = "1.+"
 fixtureMonkey = "1.0.25"
 
 [libraries]
+# main
+email-api = { module = "jakarta.mail:jakarta.mail-api", version.ref = "emailApi" }
+email-implementation = { module = "org.eclipse.angus:angus-mail", version.ref = "emailApiImplementation" }
+
+# test
 junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 mockito = { module = "org.mockito:mockito-core", version.ref = "mockito" }
