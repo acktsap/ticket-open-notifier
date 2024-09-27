@@ -14,7 +14,8 @@ import org.junit.jupiter.api.Test
 
 class TicketOpenNotificationTest {
     private val fixtureMonkey =
-        FixtureMonkey.builder()
+        FixtureMonkey
+            .builder()
             .plugin(KotlinPlugin())
             .build()
 
@@ -34,7 +35,7 @@ class TicketOpenNotificationTest {
         val ticketOpenNotification =
             TicketOpenNotification(
                 ticketOpenDetector = ticketOpenDetector,
-                tickerOpenFilter = tickerOpenFilter,
+                ticketOpenFilter = tickerOpenFilter,
                 ticketOpenHandler = ticketOpenHandler,
             )
 

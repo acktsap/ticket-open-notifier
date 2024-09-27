@@ -6,13 +6,14 @@ import acktsap.handler.TicketOpenHandler
 
 class TicketOpenNotification(
     private val ticketOpenDetector: TicketOpenDetector,
-    private val tickerOpenFilter: TicketOpenFilter,
+    private val ticketOpenFilter: TicketOpenFilter,
     private val ticketOpenHandler: TicketOpenHandler,
 ) {
     fun run() {
         val tickerOpens =
-            ticketOpenDetector.detect()
-                .filter { tickerOpenFilter.filter(it) }
+            ticketOpenDetector
+                .detect()
+                .filter { ticketOpenFilter.filter(it) }
         ticketOpenHandler.handle(tickerOpens)
     }
 }

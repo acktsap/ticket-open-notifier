@@ -8,7 +8,7 @@ import io.mockk.mockk
 import io.mockk.verifyAll
 import org.junit.jupiter.api.Test
 
-class CompositeHandlerTest {
+class CompositeTicketOpenHandlerTest {
     private val fixtureMonkey =
         FixtureMonkey
             .builder()
@@ -25,8 +25,8 @@ class CompositeHandlerTest {
                 mockk(relaxed = true),
             )
         val sut =
-            CompositeHandler(
-                delegates,
+            CompositeTicketOpenHandler(
+                *delegates.toTypedArray(),
             )
 
         // when
