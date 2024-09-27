@@ -18,7 +18,8 @@ class GmailNotifyHandler(
     override fun handle(ticketOpens: Collection<TicketOpen>) {
         val title = "티켓 오픈 알람 (${ticketOpens.size}개)"
         val content =
-            ticketOpens.sortedBy { it.dateTime }
+            ticketOpens
+                .sortedBy { it.dateTime }
                 .joinToString(separator = "\n") {
                     "${it.dateTime} ${it.name} ${it.platform}"
                 }
@@ -41,9 +42,7 @@ class GmailNotifyHandler(
             Session.getInstance(
                 prop,
                 object : Authenticator() {
-                    override fun getPasswordAuthentication(): PasswordAuthentication {
-                        return PasswordAuthentication(username, password)
-                    }
+                    override fun getPasswordAuthentication(): PasswordAuthentication = PasswordAuthentication(username, password)
                 },
             )
 
