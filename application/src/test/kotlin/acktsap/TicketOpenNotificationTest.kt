@@ -2,8 +2,8 @@ package acktsap
 
 import acktsap.detector.TicketOpenDetector
 import acktsap.filter.TicketOpenFilter
+import acktsap.handler.TicketOpenHandler
 import acktsap.model.TicketOpen
-import acktsap.notifier.TicketOpenNotifier
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMe
@@ -30,18 +30,18 @@ class TicketOpenNotificationTest {
             mockk<TicketOpenFilter>(relaxed = true) {
                 every { filter(any()) } returns true
             }
-        val ticketOpenNotifier = mockk<TicketOpenNotifier>(relaxed = true)
+        val ticketOpenHandler = mockk<TicketOpenHandler>(relaxed = true)
         val ticketOpenNotification =
             TicketOpenNotification(
                 ticketOpenDetector = ticketOpenDetector,
                 tickerOpenFilter = tickerOpenFilter,
-                ticketOpenNotifier = ticketOpenNotifier,
+                ticketOpenHandler = ticketOpenHandler,
             )
 
         // when
         ticketOpenNotification.run()
 
         // then
-        verify(exactly = 1) { ticketOpenNotifier.notify(ticketOpens) }
+        verify(exactly = 1) { ticketOpenHandler.handle(ticketOpens) }
     }
 }

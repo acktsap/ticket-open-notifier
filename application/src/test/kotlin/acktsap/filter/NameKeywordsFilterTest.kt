@@ -13,21 +13,25 @@ import java.util.concurrent.ThreadLocalRandom
 
 class NameKeywordsFilterTest {
     private val fixtureMonkey =
-        FixtureMonkey.builder()
+        FixtureMonkey
+            .builder()
             .plugin(KotlinPlugin())
             .build()
 
     @Test
     fun filter_exists_true() {
         // given
-        val ticketOpen = fixtureMonkey.giveMeBuilder<TicketOpen>()
-            .set(TicketOpen::name, Arbitraries.strings().ofMinLength(10))
-            .sample()
+        val ticketOpen =
+            fixtureMonkey
+                .giveMeBuilder<TicketOpen>()
+                .set(TicketOpen::name, Arbitraries.strings().ofMinLength(10))
+                .sample()
 
-        val sut = NameKeywordsFilter(
-            ticketOpen.name.substring(ThreadLocalRandom.current().nextInt(0, 10)),
-            UUID.randomUUID().toString(),
-        )
+        val sut =
+            NameKeywordsFilter(
+                ticketOpen.name.substring(ThreadLocalRandom.current().nextInt(0, 10)),
+                UUID.randomUUID().toString(),
+            )
 
         // when
         val actual = sut.filter(ticketOpen)
@@ -39,9 +43,11 @@ class NameKeywordsFilterTest {
     @Test
     fun filter_notExists_false() {
         // given
-        val ticketOpen = fixtureMonkey.giveMeBuilder<TicketOpen>()
-            .set(TicketOpen::name, Arbitraries.strings().ofMinLength(10))
-            .sample()
+        val ticketOpen =
+            fixtureMonkey
+                .giveMeBuilder<TicketOpen>()
+                .set(TicketOpen::name, Arbitraries.strings().ofMinLength(10))
+                .sample()
 
         val sut = NameKeywordsFilter(UUID.randomUUID().toString(), UUID.randomUUID().toString())
 

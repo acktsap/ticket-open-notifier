@@ -1,4 +1,4 @@
-package acktsap.notifier
+package acktsap.handler
 
 import acktsap.model.TicketOpen
 import jakarta.mail.Authenticator
@@ -10,12 +10,12 @@ import jakarta.mail.internet.InternetAddress
 import jakarta.mail.internet.MimeMessage
 import java.util.Properties
 
-class GmailNotifier(
+class GmailNotifyHandler(
     private val username: String,
     private val password: String,
     private val recipients: List<String>,
-) : TicketOpenNotifier {
-    override fun notify(ticketOpens: Collection<TicketOpen>) {
+) : TicketOpenHandler {
+    override fun handle(ticketOpens: Collection<TicketOpen>) {
         val title = "티켓 오픈 알람 (${ticketOpens.size}개)"
         val content =
             ticketOpens.sortedBy { it.dateTime }

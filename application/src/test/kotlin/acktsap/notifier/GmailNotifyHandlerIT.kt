@@ -1,15 +1,16 @@
 package acktsap.notifier
 
+import acktsap.handler.GmailNotifyHandler
 import acktsap.model.Platform
 import acktsap.model.TicketOpen
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 
-class GmailNotifierIT {
+class GmailNotifyHandlerIT {
     @Disabled("Manual test")
     @Test
-    fun notifyTest() {
+    fun handle() {
         // given
         val ticketOpens =
             listOf(
@@ -25,7 +26,7 @@ class GmailNotifierIT {
                 ),
             )
         val sut =
-            GmailNotifier(
+            GmailNotifyHandler(
                 username = "sibera21@gmail.com",
                 // check pw in https://myaccount.google.com/apppasswords
                 password = "todo",
@@ -36,7 +37,7 @@ class GmailNotifierIT {
             )
 
         // when
-        sut.notify(ticketOpens)
+        sut.handle(ticketOpens)
 
         // then
         // check if sent to your mail
