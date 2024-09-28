@@ -1,10 +1,10 @@
 package acktsap.config
 
 class EnvironmentConfiguration : Configuration {
-    override val targetKeywords: List<String>? = getenv(KEYWORDS)?.split(",")
-    override val emailSender: String? = getenv(EMAIL_SENDER)
-    override val emailSenderPassword: String? = getenv(EMAIL_PASSWORD)
-    override val emailRecipients: List<String>? = getenv(EMAIL_RECIPIENTS)?.split(",")
+    override val targetKeywords: List<String>? by lazy { getenv(KEYWORDS)?.split(",") }
+    override val emailSender: String? by lazy { getenv(EMAIL_SENDER) }
+    override val emailSenderPassword: String? by lazy { getenv(EMAIL_PASSWORD) }
+    override val emailRecipients: List<String>? by lazy { getenv(EMAIL_RECIPIENTS)?.split(",") }
 
     companion object {
         fun getenv(key: String): String? = System.getenv(key)
