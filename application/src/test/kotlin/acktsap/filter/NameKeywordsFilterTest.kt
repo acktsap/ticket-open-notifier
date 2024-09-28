@@ -3,9 +3,7 @@ package acktsap.filter
 import acktsap.model.TicketOpen
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
-import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
-import com.navercorp.fixturemonkey.kotlin.set
-import net.jqwik.api.Arbitraries
+import com.navercorp.fixturemonkey.kotlin.giveMe
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.util.UUID
@@ -19,42 +17,33 @@ class NameKeywordsFilterTest {
             .build()
 
     @Test
-    fun filter_exists_true() {
+    fun doFilter_existsOnTarget_returnTarget() {
         // given
-        val ticketOpen =
-            fixtureMonkey
-                .giveMeBuilder<TicketOpen>()
-                .set(TicketOpen::name, Arbitraries.strings().ofMinLength(10))
-                .sample()
-
+        val ticketOpens = fixtureMonkey.giveMe<TicketOpen>(10)
+        val targetTicketOpen = ticketOpens.first()
         val sut =
             NameKeywordsFilter(
-                ticketOpen.name.substring(ThreadLocalRandom.current().nextInt(0, 10)),
+                targetTicketOpen.name.substring(ThreadLocalRandom.current().nextInt(0, 10)),
                 UUID.randomUUID().toString(),
             )
 
         // when
-        val actual = sut.filter(ticketOpen)
+        val actual = sut.doFilter(ticketOpens)
 
         // then
-        assertThat(actual).isTrue()
+        assertThat(actual).isEqualTo(listOf(targetTicketOpen))
     }
 
     @Test
-    fun filter_notExists_false() {
+    fun doFilter_notExistsForAll_returnEmptyList() {
         // given
-        val ticketOpen =
-            fixtureMonkey
-                .giveMeBuilder<TicketOpen>()
-                .set(TicketOpen::name, Arbitraries.strings().ofMinLength(10))
-                .sample()
-
+        val ticketOpens = fixtureMonkey.giveMe<TicketOpen>(10)
         val sut = NameKeywordsFilter(UUID.randomUUID().toString(), UUID.randomUUID().toString())
 
         // when
-        val actual = sut.filter(ticketOpen)
+        val actual = sut.doFilter(ticketOpens)
 
         // then
-        assertThat(actual).isFalse()
+        assertThat(actual).isEmpty()
     }
 }

@@ -27,9 +27,10 @@ class TicketOpenNotificationTest {
             mockk<TicketOpenDetector>(relaxed = true) {
                 every { detect() } returns ticketOpens
             }
+        val targetTicketOpens = fixtureMonkey.giveMe<TicketOpen>(10)
         val tickerOpenFilter =
             mockk<TicketOpenFilter>(relaxed = true) {
-                every { filter(any()) } returns true
+                every { doFilter(ticketOpens) } returns targetTicketOpens
             }
         val ticketOpenHandler = mockk<TicketOpenHandler>(relaxed = true)
         val ticketOpenNotification =
@@ -43,6 +44,6 @@ class TicketOpenNotificationTest {
         ticketOpenNotification.run()
 
         // then
-        verify(exactly = 1) { ticketOpenHandler.handle(ticketOpens) }
+        verify(exactly = 1) { ticketOpenHandler.handle(targetTicketOpens) }
     }
 }

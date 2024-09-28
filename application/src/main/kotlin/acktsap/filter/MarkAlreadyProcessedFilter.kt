@@ -6,5 +6,8 @@ import acktsap.repository.ViewedTicketOpenRepository
 class MarkAlreadyProcessedFilter(
     private val ticketOpenRepository: ViewedTicketOpenRepository,
 ) : TicketOpenFilter {
-    override fun filter(ticketOpen: TicketOpen): Boolean = ticketOpenRepository.exists(ticketOpen)
+    override fun doFilter(ticketOpens: List<TicketOpen>): List<TicketOpen> =
+        ticketOpens.filter {
+            !ticketOpenRepository.exists(it)
+        }
 }

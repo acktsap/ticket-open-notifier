@@ -7,5 +7,8 @@ class CompositeTicketOpenFilter(
 ) : TicketOpenFilter {
     private val delegates = delegates.toList()
 
-    override fun filter(ticketOpen: TicketOpen): Boolean = delegates.any { it.filter(ticketOpen) }
+    override fun doFilter(ticketOpens: List<TicketOpen>): List<TicketOpen> =
+        delegates.fold(ticketOpens) { remains, filter ->
+            filter.doFilter(remains)
+        }
 }

@@ -3,7 +3,7 @@ package acktsap.filter
 import acktsap.model.TicketOpen
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
-import com.navercorp.fixturemonkey.kotlin.giveMeOne
+import com.navercorp.fixturemonkey.kotlin.giveMe
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -17,38 +17,42 @@ class CompositeTicketOpenFilterTest {
             .build()
 
     @Test
-    fun filter_anyReturnTrue_returnTrue() {
+    fun doFilter_allMatch_returnMatched() {
         // given
-        val ticketOpen = fixtureMonkey.giveMeOne<TicketOpen>()
+        val ticketOpens = fixtureMonkey.giveMe<TicketOpen>(10)
+        val targetTicketOpen = ticketOpens.random()
+        val targetTicketOpens = listOf(targetTicketOpen)
         val sut =
             CompositeTicketOpenFilter(
-                mockk(relaxed = true) { every { filter(any()) } returns true },
-                mockk(relaxed = true) { every { filter(any()) } returns false },
-                mockk(relaxed = true) { every { filter(any()) } returns false },
+                mockk(relaxed = true) { every { doFilter(any()) } returns targetTicketOpens },
+                mockk(relaxed = true) { every { doFilter(any()) } returns targetTicketOpens },
+                mockk(relaxed = true) { every { doFilter(any()) } returns targetTicketOpens },
             )
 
         // when
-        val actual = sut.filter(ticketOpen)
+        val actual = sut.doFilter(ticketOpens)
 
         // then
-        assertThat(actual).isTrue()
+        assertThat(actual).isEqualTo(targetTicketOpens)
     }
 
     @Test
-    fun filter_allReturnFalse_returnFalse() {
+    fun doFilter_anyNotMatch_notReturnNotMatched() {
         // given
-        val ticketOpen = fixtureMonkey.giveMeOne<TicketOpen>()
+        val ticketOpens = fixtureMonkey.giveMe<TicketOpen>(10)
+        val targetTicketOpen = ticketOpens.random()
+        val targetTicketOpens = listOf(targetTicketOpen)
         val sut =
             CompositeTicketOpenFilter(
-                mockk(relaxed = true) { every { filter(any()) } returns false },
-                mockk(relaxed = true) { every { filter(any()) } returns false },
-                mockk(relaxed = true) { every { filter(any()) } returns false },
+                mockk(relaxed = true) { every { doFilter(any()) } returns targetTicketOpens },
+                mockk(relaxed = true) { every { doFilter(any()) } returns targetTicketOpens },
+                mockk(relaxed = true) { every { doFilter(any()) } returns listOf() },
             )
 
         // when
-        val actual = sut.filter(ticketOpen)
+        val actual = sut.doFilter(ticketOpens)
 
         // then
-        assertThat(actual).isFalse()
+        assertThat(actual).isEmpty()
     }
 }

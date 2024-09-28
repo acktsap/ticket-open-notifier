@@ -7,7 +7,8 @@ class NameKeywordsFilter(
 ) : TicketOpenFilter {
     private val keywords: List<String> = keywords.toList()
 
-    override fun filter(ticketOpen: TicketOpen): Boolean {
-        return keywords.any { ticketOpen.name.contains(it) }
-    }
+    override fun doFilter(ticketOpens: List<TicketOpen>): List<TicketOpen> =
+        ticketOpens.filter { ticketOpen ->
+            keywords.any { ticketOpen.name.contains(it) }
+        }
 }

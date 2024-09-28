@@ -10,10 +10,8 @@ class TicketOpenNotification(
     private val ticketOpenHandler: TicketOpenHandler,
 ) {
     fun run() {
-        val tickerOpens =
-            ticketOpenDetector
-                .detect()
-                .filter { ticketOpenFilter.filter(it) }
-        ticketOpenHandler.handle(tickerOpens)
+        val tickerOpens = ticketOpenDetector.detect()
+        val targetTickerOpens = ticketOpenFilter.doFilter(tickerOpens)
+        ticketOpenHandler.handle(targetTickerOpens)
     }
 }
