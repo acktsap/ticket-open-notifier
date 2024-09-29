@@ -13,6 +13,9 @@ dependencies {
     implementation(libs.selenium)
     implementation(libs.email.api)
     implementation(libs.email.implementation)
+    implementation(libs.logging)
+    runtimeOnly(libs.logging.implementation)
 
     testImplementation(libs.bundles.test.kotlin)
+    testRuntimeOnly(libs.logging.implementation)
 }

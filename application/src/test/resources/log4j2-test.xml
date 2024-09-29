@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%style{%d{YYYY-MM-dd HH:mm:ss.SSS}}{Cyan} %highlight{[%t] %-5level %c#L%L - %msg}{style=Logback}%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="console"/>
+        </Root>
+
+        <Logger name="actksap" level="trace"/>
+    </Loggers>
+</Configuration>
