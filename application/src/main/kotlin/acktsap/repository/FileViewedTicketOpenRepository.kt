@@ -10,6 +10,8 @@ import kotlin.io.path.bufferedReader
 import kotlin.io.path.bufferedWriter
 import kotlin.io.path.exists
 
+private val logger = KotlinLogging.logger { }
+
 /**
  * File format
  *
@@ -23,13 +25,13 @@ class FileViewedTicketOpenRepository(
     init {
         val openedSet = mutableSetOf<TicketOpen>()
         if (path.exists()) {
-            LOGGER.info { "Reading visited information from '$path'" }
             path.bufferedReader().use {
                 it.forEachLine { line ->
-                    LOGGER.trace { "Reading '$line'" }
+                    logger.trace { "Reading '$line'" }
                     openedSet.add(deserialize(line))
                 }
             }
+            logger.info { "Found ${openedSet.size} items from '$path" }
         }
         this.openedSet = openedSet
     }
@@ -42,10 +44,10 @@ class FileViewedTicketOpenRepository(
 
     override fun close() {
         path.bufferedWriter().use {
-            LOGGER.info { "Saving visited information to '$path'" }
+            logger.info { "Saving ${openedSet.size} items to '$path'" }
             for (ticketOpen in openedSet) {
                 val line = serialize(ticketOpen)
-                LOGGER.trace { "Saving '$line'" }
+                logger.trace { "Saving '$line'" }
                 it.write("$line\n")
             }
         }
@@ -69,7 +71,6 @@ class FileViewedTicketOpenRepository(
 
     companion object {
         private val DATETIME_FORMATER = DateTimeFormatter.ISO_LOCAL_DATE_TIME
-        private val LOGGER = KotlinLogging.logger { }
         private const val DELIMITER = ","
     }
 }

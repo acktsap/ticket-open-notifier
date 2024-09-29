@@ -23,7 +23,8 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
             driver.get(URL)
             val tableBody =
                 driver.findElement(By.cssSelector("body > div > div > div.list > div.table > table > tbody"))
-            return tableBody.findElements(By.tagName("tr"))
+            return tableBody
+                .findElements(By.tagName("tr"))
                 .map { convertToTicketOpen(it) }
         } finally {
             driver.quit()
