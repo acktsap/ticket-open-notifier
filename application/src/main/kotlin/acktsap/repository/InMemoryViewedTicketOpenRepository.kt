@@ -15,4 +15,8 @@ class InMemoryViewedTicketOpenRepository(
     }
 
     override fun exists(ticketOpen: TicketOpen): Boolean = viewedSet.containsKey(ticketOpen)
+
+    override fun close() {
+        // do nothing
+    }
 }
