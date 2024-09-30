@@ -1,5 +1,7 @@
 package acktsap.config
 
+import java.nio.file.Path
+
 class CompositeConfiguration(
     vararg configuration: Configuration,
 ) : Configuration {
@@ -31,5 +33,19 @@ class CompositeConfiguration(
             .asSequence()
             .map { it.emailRecipients }
             .firstOrNull { it != null }
+    }
+
+    override val visitedFilePath: Path? by lazy {
+        configurations
+            .asSequence()
+            .map { it.visitedFilePath }
+            .firstOrNull { it != null }
+    }
+
+    override fun merge(other: Configuration): Configuration {
+        val configurations = this.configurations + other
+        return CompositeConfiguration(
+            *configurations.toTypedArray(),
+        )
     }
 }

@@ -78,4 +78,49 @@ class CompositeConfigurationTest {
         // then
         assertThat(actual).isEqualTo(mockEmailRecipients)
     }
+
+    @Test
+    fun merge_bothExists_firstTakePriority() {
+        // given
+        val firstSender = fixtureMonkey.giveMeOne<String?>()
+        val secondSender = fixtureMonkey.giveMeOne<String?>()
+        val firstConfiguration = mockk<Configuration> { every { emailSender } returns firstSender }
+        val secondConfiguration = mockk<Configuration> { every { emailSender } returns secondSender }
+        val sut = CompositeConfiguration(firstConfiguration)
+
+        // when
+        val actual = sut + secondConfiguration
+
+        // then
+        assertThat(actual.emailSender).isEqualTo(firstSender)
+    }
+
+    @Test
+    fun merge_otherExists_returnOtherOne() {
+        // given
+        val secondSender = fixtureMonkey.giveMeOne<String?>()
+        val firstConfiguration = mockk<Configuration> { every { emailSender } returns null }
+        val secondConfiguration = mockk<Configuration> { every { emailSender } returns secondSender }
+        val sut = CompositeConfiguration(firstConfiguration)
+
+        // when
+        val actual = sut + secondConfiguration
+
+        // then
+        assertThat(actual.emailSender).isEqualTo(secondSender)
+    }
+
+    @Test
+    fun merge_bothNotExists_returnNull() {
+        // given
+        val firstConfiguration = mockk<Configuration> { every { emailSender } returns null }
+        val secondConfiguration = mockk<Configuration> { every { emailSender } returns null }
+        val sut = CompositeConfiguration(firstConfiguration)
+
+        // when
+        val actual = sut + secondConfiguration
+
+        // then
+        assertThat(actual.emailSender).isNull()
+    }
 }
