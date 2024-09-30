@@ -1,8 +1,17 @@
 package acktsap
 
+import acktsap.config.Configuration
+import acktsap.detector.InterparkTicketOpenDetector
 import acktsap.detector.TicketOpenDetector
+import acktsap.filter.CompositeTicketOpenFilter
+import acktsap.filter.MarkAlreadyProcessedFilter
+import acktsap.filter.NameKeywordsFilter
 import acktsap.filter.TicketOpenFilter
+import acktsap.handler.AlreadyProcessedMarkingHandler
+import acktsap.handler.CompositeTicketOpenHandler
+import acktsap.handler.GmailNotifyHandler
 import acktsap.handler.TicketOpenHandler
+import acktsap.repository.FileViewedTicketOpenRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger { }
@@ -26,5 +35,40 @@ class TicketOpenNotification(
         }
 
         ticketOpenHandler.handle(targetTickerOpens)
+    }
+
+    companion object {
+        fun create(
+            configuration: Configuration,
+            viewedTicketOpenRepository: FileViewedTicketOpenRepository,
+        ): TicketOpenNotification {
+            val ticketOpenDetector = InterparkTicketOpenDetector()
+
+            val keywords = configuration.targetKeywords ?: listOf()
+            val ticketOpenFilter =
+                CompositeTicketOpenFilter(
+                    MarkAlreadyProcessedFilter(viewedTicketOpenRepository),
+                    NameKeywordsFilter(*keywords.toTypedArray()),
+                )
+
+            val username = checkNotNull(configuration.emailSender) { "Email sender must be provied" }
+            val password = checkNotNull(configuration.emailSenderPassword) { "Email sender password must be provied" }
+            val recipients = checkNotNull(configuration.emailRecipients) { "Email recipients must be provied" }
+            val ticketOpenHandler =
+                CompositeTicketOpenHandler(
+                    AlreadyProcessedMarkingHandler(viewedTicketOpenRepository),
+                    GmailNotifyHandler(
+                        username = username,
+                        password = password,
+                        recipients = recipients,
+                    ),
+                )
+
+            return TicketOpenNotification(
+                ticketOpenDetector = ticketOpenDetector,
+                ticketOpenFilter = ticketOpenFilter,
+                ticketOpenHandler = ticketOpenHandler,
+            )
+        }
     }
 }
