@@ -10,10 +10,11 @@ tasks.named<ShadowJar>("shadowJar") {
     // custom names
     archiveBaseName.set(project.rootProject.name)
     archiveClassifier.set("all")
-    // archiveVersion.set("") // if want to customize version
 
     // remove all classes of dependencies that are not used by the project
-    minimize()
+    minimize {
+        exclude(dependency("org.seleniumhq.selenium:selenium-java:.*"))
+    }
 
     // show logging
     doLast {
