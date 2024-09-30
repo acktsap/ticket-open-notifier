@@ -6,6 +6,7 @@ import acktsap.model.TicketOpen
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
+import java.util.UUID
 
 class GmailNotifyHandlerIT {
     @Disabled("Manual test")
@@ -41,5 +42,23 @@ class GmailNotifyHandlerIT {
 
         // then
         // check if sent to your mail
+    }
+
+    @Test
+    fun handle_empty_doNothing() {
+        // given
+        val ticketOpens = listOf<TicketOpen>()
+        val sut =
+            GmailNotifyHandler(
+                username = UUID.randomUUID().toString(),
+                password = UUID.randomUUID().toString(),
+                recipients = listOf(),
+            )
+
+        // when
+        sut.handle(ticketOpens)
+
+        // then
+        // do nothing
     }
 }

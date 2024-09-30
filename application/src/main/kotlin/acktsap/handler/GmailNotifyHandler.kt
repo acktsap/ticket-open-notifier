@@ -1,6 +1,7 @@
 package acktsap.handler
 
 import acktsap.model.TicketOpen
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.mail.Authenticator
 import jakarta.mail.Message
 import jakarta.mail.PasswordAuthentication
@@ -10,12 +11,19 @@ import jakarta.mail.internet.InternetAddress
 import jakarta.mail.internet.MimeMessage
 import java.util.Properties
 
+private val logger = KotlinLogging.logger { }
+
 class GmailNotifyHandler(
     private val username: String,
     private val password: String,
     private val recipients: List<String>,
 ) : TicketOpenHandler {
     override fun handle(ticketOpens: Collection<TicketOpen>) {
+        if (ticketOpens.isEmpty()) {
+            logger.info { "0 ticketOpens found. No gmail notification" }
+            return
+        }
+
         val title = "티켓 오픈 알람 (${ticketOpens.size}개)"
         val content =
             ticketOpens
@@ -24,6 +32,7 @@ class GmailNotifyHandler(
                     "${it.dateTime} ${it.name} ${it.platform}"
                 }
         sendEmail(title, content)
+        logger.info { "Success to make email notification" }
     }
 
     private fun sendEmail(
