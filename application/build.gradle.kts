@@ -14,6 +14,8 @@ dependencies {
     implementation(libs.email.api)
     implementation(libs.email.implementation)
     implementation(libs.logging)
+
+    implementation(libs.bundles.logging)
     runtimeOnly(libs.logging.implementation)
 
     testImplementation(libs.bundles.test.kotlin)
