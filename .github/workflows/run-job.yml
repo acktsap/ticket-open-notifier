@@ -1,0 +1,52 @@
+name: Run JAR File Daily with Cache
+
+# Schedule the job to run daily at midnight (UTC)
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Every day at 00:00 UTC
+  workflow_dispatch:  # Allows manual trigger of the workflow
+
+jobs:
+  run-jar-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Java (if required)
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'  # Use the Temurin distribution (AdoptOpenJDK)
+          java-version: '21'       # Specify the version of Java
+
+      # Restore cache for visited.txt, skip if not available
+      - name: Restore cache for visited.txt
+        id: cache-visited
+        uses: actions/cache@v3
+        with:
+          path: visited.txt  # Specify the file to cache
+          key: visited-cache-${{ runner.os }}
+          restore-keys: |
+            visited-cache-${{ runner.os }}-
+        continue-on-error: true  # Continue even if the cache is not found
+
+      # Run the JAR file from the ./bin path (this should read and update visited.txt if it exists)
+      - name: Run JAR file
+        run: |
+          TARGET=$(find bin/ -name "*.jar")
+          java -jar $TARGET -p visited.txt
+        env:
+          EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          EMAIL_RECIPIENT:  ${{ secrets.EMAIL_RECIPIENT }}
+
+      # Save updated visited.txt to the cache if it was modified
+      - name: Save cache for visited.txt
+        if: ${{ steps.cache-visited.outputs.cache-hit != 'false' && hashFiles('visited.txt') != '' }}
+        uses: actions/cache@v3
+        with:
+          path: visited.txt
+          key: visited-cache-${{ runner.os }}-${{ hashFiles('visited.txt') }}  # Save new cache based on file hash
