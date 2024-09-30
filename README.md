@@ -13,3 +13,4 @@
 - Clean: `./gradlew clean`
 - Check: `./gradlew check`
 - Build: `./gradlew build`
+- Update bin: `./gradlew updateBin`
