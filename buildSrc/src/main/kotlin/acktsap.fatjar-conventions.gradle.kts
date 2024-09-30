@@ -11,11 +11,6 @@ tasks.named<ShadowJar>("shadowJar") {
     archiveBaseName.set(project.rootProject.name)
     archiveClassifier.set("all")
 
-    // remove all classes of dependencies that are not used by the project
-    minimize {
-        exclude(dependency("org.seleniumhq.selenium:selenium-java:.*"))
-    }
-
     // show logging
     doLast {
         println("Shadow jar is generated in '${project.layout.buildDirectory.get()}/libs'")
