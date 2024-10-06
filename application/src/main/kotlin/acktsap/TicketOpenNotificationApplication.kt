@@ -7,17 +7,7 @@ import acktsap.config.InMemoryConfiguration
 import acktsap.repository.FileViewedTicketOpenRepository
 import kotlin.system.exitProcess
 
-private val targetKeywords =
-    listOf(
-        "노멀",
-        "지킬",
-        "시카고",
-        "알라딘",
-        "아이다",
-        "고스트",
-        "데스노트",
-        "스위니",
-    )
+private const val KEYWORD_FILE = "keywords.txt"
 
 fun main(args: Array<String>) {
     val configurationByCli =
@@ -42,7 +32,18 @@ fun main(args: Array<String>) {
 }
 
 private fun baseConfiguration(): Configuration {
+    val targetKeywords = loadKeywords()
     val inMemoryConfiguration = InMemoryConfiguration(targetKeywords = targetKeywords)
     val environmentConfiguration = EnvironmentConfiguration()
     return inMemoryConfiguration + environmentConfiguration
+}
+
+private fun loadKeywords(): List<String> {
+    val classLoader = Thread.currentThread().contextClassLoader
+    val file = KEYWORD_FILE
+    val resourceAsStream =
+        checkNotNull(classLoader.getResourceAsStream(file)) { "Can't find keyword files (name: $file)" }
+    return resourceAsStream
+        .bufferedReader()
+        .readLines()
 }
