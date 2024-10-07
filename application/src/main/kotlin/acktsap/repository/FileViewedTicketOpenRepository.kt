@@ -19,6 +19,7 @@ private val logger = KotlinLogging.logger { }
  */
 class FileViewedTicketOpenRepository(
     private val path: Path,
+    private val keepTicketOpenBeforeToday: Long,
 ) : ViewedTicketOpenRepository {
     private val openedSet: MutableSet<TicketOpen>
 
@@ -44,8 +45,11 @@ class FileViewedTicketOpenRepository(
 
     override fun close() {
         path.bufferedWriter().use {
-            logger.info { "Saving ${openedSet.size} items to '$path'" }
-            for (ticketOpen in openedSet) {
+            val baseDateTime = LocalDateTime.now().minusDays(keepTicketOpenBeforeToday)
+            val filtered = openedSet.filter { ticketOpen -> ticketOpen.dateTime.isAfter(baseDateTime) }
+            logger.info { "${openedSet.size - filtered.size} items removed as obsolete (baseDateTime: $baseDateTime)" }
+            logger.info { "Saving ${filtered.size} items to '$path' (${openedSet.size - filtered.size} items removed as obsolete)" }
+            for (ticketOpen in filtered) {
                 val line = serialize(ticketOpen)
                 logger.trace { "Saving '$line'" }
                 it.write("$line\n")

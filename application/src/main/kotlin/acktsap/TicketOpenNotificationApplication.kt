@@ -8,6 +8,7 @@ import acktsap.repository.FileViewedTicketOpenRepository
 import kotlin.system.exitProcess
 
 private const val KEYWORD_FILE = "keywords.txt"
+private const val TICKETOPEN_KEEP_DATE = 7L
 
 fun main(args: Array<String>) {
     val configurationByCli =
@@ -24,7 +25,7 @@ fun main(args: Array<String>) {
 
     val configuration = baseConfiguration() + configurationByCli
     val visitedFilePath = checkNotNull(configuration.visitedFilePath) { "Visited file path must be provided" }
-    val viewedTicketOpenRepository = FileViewedTicketOpenRepository(visitedFilePath)
+    val viewedTicketOpenRepository = FileViewedTicketOpenRepository(visitedFilePath, TICKETOPEN_KEEP_DATE)
     viewedTicketOpenRepository.use {
         val ticketOpenNotification = TicketOpenNotification.create(configuration, it)
         ticketOpenNotification.run()
