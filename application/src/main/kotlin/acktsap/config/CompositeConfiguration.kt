@@ -7,10 +7,10 @@ class CompositeConfiguration(
 ) : Configuration {
     private val configurations: List<Configuration> = configuration.toList()
 
-    override val targetKeywords: List<String>? by lazy {
+    override val includeKeywords: List<String>? by lazy {
         configurations
             .asSequence()
-            .map { it.targetKeywords }
+            .map { it.includeKeywords }
             .firstOrNull { it != null }
     }
 

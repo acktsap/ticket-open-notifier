@@ -18,16 +18,16 @@ class CompositeConfigurationTest {
             .build()
 
     @Test
-    fun targetKeywords() {
+    fun includeKeywords() {
         // given
         val mockTargetKeywords = fixtureMonkey.giveMeOne<List<String>?>()
         val sut =
             CompositeConfiguration(
-                mockk<Configuration> { every { targetKeywords } returns mockTargetKeywords },
+                mockk<Configuration> { every { includeKeywords } returns mockTargetKeywords },
             )
 
         // when
-        val actual = sut.targetKeywords
+        val actual = sut.includeKeywords
 
         // then
         actual shouldBe mockTargetKeywords

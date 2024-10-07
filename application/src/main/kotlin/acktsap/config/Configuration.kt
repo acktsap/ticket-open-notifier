@@ -3,7 +3,7 @@ package acktsap.config
 import java.nio.file.Path
 
 interface Configuration {
-    val targetKeywords: List<String>?
+    val includeKeywords: List<String>?
 
     val emailSender: String?
 

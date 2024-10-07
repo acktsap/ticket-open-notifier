@@ -5,7 +5,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val logger = KotlinLogging.logger { }
 
-class NameKeywordsFilter(
+class IncludeKeywordsFilter(
     vararg keywords: String,
 ) : TicketOpenFilter {
     private val keywords: List<String> = keywords.toList()
@@ -16,7 +16,7 @@ class NameKeywordsFilter(
                 keywords.any { ticketOpen.name.contains(it) }
             }
         logger.debug {
-            "${filtered.size} items remains after keyword filtering (keywords: ${keywords.joinToString { "," }})"
+            "${filtered.size} items remains after include keyword filtering (keywords: ${keywords.joinToString { "," }})"
         }
         return filtered
     }
