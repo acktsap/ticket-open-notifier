@@ -26,14 +26,14 @@ class InMemoryConfigurationTest {
         val emailRecipients = fixtureMonkey.giveMeOne<List<String>?>()
         val sut =
             InMemoryConfiguration(
-                targetKeywords = targetKeywords,
+                includeKeywords = targetKeywords,
                 emailSender = emailSender,
                 emailSenderPassword = emailSenderPassword,
                 emailRecipients = emailRecipients,
             )
 
         // when, then
-        sut.targetKeywords shouldBe targetKeywords
+        sut.includeKeywords shouldBe targetKeywords
         sut.emailSender shouldBe emailSender
         sut.emailSenderPassword shouldBe emailSenderPassword
         sut.emailRecipients shouldBe emailRecipients

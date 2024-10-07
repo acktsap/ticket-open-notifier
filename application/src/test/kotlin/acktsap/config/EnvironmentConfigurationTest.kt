@@ -23,7 +23,7 @@ class EnvironmentConfigurationTest {
         val sut = EnvironmentConfiguration()
 
         // when, then
-        sut.targetKeywords should beNull()
+        sut.includeKeywords should beNull()
         sut.emailSender should beNull()
         sut.emailSenderPassword should beNull()
         sut.emailRecipients should beNull()
