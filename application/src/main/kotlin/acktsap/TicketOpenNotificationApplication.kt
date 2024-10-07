@@ -3,11 +3,13 @@ package acktsap
 import acktsap.cli.CliArgumentParser
 import acktsap.config.Configuration
 import acktsap.config.EnvironmentConfiguration
-import acktsap.config.InMemoryConfiguration
+import acktsap.config.FileBasedConfiguration
 import acktsap.repository.FileViewedTicketOpenRepository
+import kotlin.io.path.Path
 import kotlin.system.exitProcess
 
 private const val INCLUDE_KEYWORD_FILE = "include_keywords.txt"
+private const val EXCLUDE_KEYWORD_FILE = "exclude_keywords.txt"
 private const val TICKETOPEN_KEEP_DATE = 7L
 
 fun main(args: Array<String>) {
@@ -33,18 +35,11 @@ fun main(args: Array<String>) {
 }
 
 private fun baseConfiguration(): Configuration {
-    val targetKeywords = loadKeywords()
-    val inMemoryConfiguration = InMemoryConfiguration(includeKeywords = targetKeywords)
+    val fileBasedConfiguration =
+        FileBasedConfiguration(
+            includeKeywordsFile = Path(INCLUDE_KEYWORD_FILE),
+            excludeKeywordsFile = Path(EXCLUDE_KEYWORD_FILE),
+        )
     val environmentConfiguration = EnvironmentConfiguration()
-    return inMemoryConfiguration + environmentConfiguration
-}
-
-private fun loadKeywords(): List<String> {
-    val classLoader = Thread.currentThread().contextClassLoader
-    val file = INCLUDE_KEYWORD_FILE
-    val resourceAsStream =
-        checkNotNull(classLoader.getResourceAsStream(file)) { "Can't find keyword files (name: $file)" }
-    return resourceAsStream
-        .bufferedReader()
-        .readLines()
+    return fileBasedConfiguration + environmentConfiguration
 }

@@ -4,6 +4,7 @@ import acktsap.config.Configuration
 import acktsap.detector.InterparkTicketOpenDetector
 import acktsap.detector.TicketOpenDetector
 import acktsap.filter.CompositeTicketOpenFilter
+import acktsap.filter.ExcludeKeywordsFilter
 import acktsap.filter.IncludeKeywordsFilter
 import acktsap.filter.MarkAlreadyProcessedFilter
 import acktsap.filter.TicketOpenFilter
@@ -44,11 +45,13 @@ class TicketOpenNotification(
         ): TicketOpenNotification {
             val ticketOpenDetector = InterparkTicketOpenDetector()
 
-            val keywords = configuration.includeKeywords ?: listOf()
+            val includeKeywords = configuration.includeKeywords ?: listOf()
+            val excludeKeywords = configuration.excludeKeywords ?: listOf()
             val ticketOpenFilter =
                 CompositeTicketOpenFilter(
                     MarkAlreadyProcessedFilter(viewedTicketOpenRepository),
-                    IncludeKeywordsFilter(*keywords.toTypedArray()),
+                    IncludeKeywordsFilter(*includeKeywords.toTypedArray()),
+                    ExcludeKeywordsFilter(*excludeKeywords.toTypedArray()),
                 )
 
             val username = checkNotNull(configuration.emailSender) { "Email sender must be provied" }
