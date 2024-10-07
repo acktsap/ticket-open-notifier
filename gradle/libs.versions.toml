@@ -14,7 +14,7 @@ loggingImplementation = "2.24.0"
 junit = "5.+"
 kotest = "5.9.+"
 mockk = "1.+"
-fixtureMonkey = "1.0.25"
+fixtureMonkey = "1.0.+"
 
 [libraries]
 ### main
