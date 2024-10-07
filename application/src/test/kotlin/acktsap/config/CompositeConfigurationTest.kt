@@ -3,9 +3,11 @@ package acktsap.config
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
+import io.kotest.matchers.nulls.beNull
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class CompositeConfigurationTest {
@@ -28,7 +30,7 @@ class CompositeConfigurationTest {
         val actual = sut.targetKeywords
 
         // then
-        assertThat(actual).isEqualTo(mockTargetKeywords)
+        actual shouldBe mockTargetKeywords
     }
 
     @Test
@@ -44,7 +46,7 @@ class CompositeConfigurationTest {
         val actual = sut.emailSender
 
         // then
-        assertThat(actual).isEqualTo(mockEmailSender)
+        actual shouldBe mockEmailSender
     }
 
     @Test
@@ -60,7 +62,7 @@ class CompositeConfigurationTest {
         val actual = sut.emailSenderPassword
 
         // then
-        assertThat(actual).isEqualTo(mockEmailSenderPassword)
+        actual shouldBe mockEmailSenderPassword
     }
 
     @Test
@@ -76,7 +78,7 @@ class CompositeConfigurationTest {
         val actual = sut.emailRecipients
 
         // then
-        assertThat(actual).isEqualTo(mockEmailRecipients)
+        actual shouldBe mockEmailRecipients
     }
 
     @Test
@@ -92,7 +94,7 @@ class CompositeConfigurationTest {
         val actual = sut + secondConfiguration
 
         // then
-        assertThat(actual.emailSender).isEqualTo(firstSender)
+        actual.emailSender shouldBe firstSender
     }
 
     @Test
@@ -107,7 +109,7 @@ class CompositeConfigurationTest {
         val actual = sut + secondConfiguration
 
         // then
-        assertThat(actual.emailSender).isEqualTo(secondSender)
+        actual.emailSender shouldBe secondSender
     }
 
     @Test
@@ -121,6 +123,6 @@ class CompositeConfigurationTest {
         val actual = sut + secondConfiguration
 
         // then
-        assertThat(actual.emailSender).isNull()
+        actual.emailSender should beNull()
     }
 }

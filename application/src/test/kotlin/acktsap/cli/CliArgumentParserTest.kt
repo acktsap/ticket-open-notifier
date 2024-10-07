@@ -1,7 +1,7 @@
 package acktsap.cli
 
-import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatThrownBy
+import io.kotest.assertions.throwables.shouldThrowExactly
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.nio.file.Path
 import java.util.UUID
@@ -18,7 +18,7 @@ class CliArgumentParserTest {
         val configuration = sut.parse(args)
 
         // then
-        assertThat(configuration.visitedFilePath).isEqualTo(Path.of(filePath))
+        configuration.visitedFilePath shouldBe Path.of(filePath)
     }
 
     @Test
@@ -28,9 +28,9 @@ class CliArgumentParserTest {
         val sut = CliArgumentParser()
 
         // when, then
-        assertThatThrownBy {
+        shouldThrowExactly<IllegalArgumentException> {
             sut.parse(args)
-        }.isInstanceOf(IllegalArgumentException::class.java)
+        }
     }
 
     @Test
@@ -40,8 +40,8 @@ class CliArgumentParserTest {
         val sut = CliArgumentParser()
 
         // when, then
-        assertThatThrownBy {
+        shouldThrowExactly<UnsupportedOperationException> {
             sut.parse(args)
-        }.isInstanceOf(UnsupportedOperationException::class.java)
+        }
     }
 }

@@ -3,9 +3,11 @@ package acktsap.config
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
+import io.kotest.matchers.nulls.beNull
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class EnvironmentConfigurationTest {
@@ -21,10 +23,10 @@ class EnvironmentConfigurationTest {
         val sut = EnvironmentConfiguration()
 
         // when, then
-        assertThat(sut.targetKeywords).isNull()
-        assertThat(sut.emailSender).isNull()
-        assertThat(sut.emailSenderPassword).isNull()
-        assertThat(sut.emailRecipients).isNull()
+        sut.targetKeywords should beNull()
+        sut.emailSender should beNull()
+        sut.emailSenderPassword should beNull()
+        sut.emailRecipients should beNull()
     }
 
     @Test
@@ -38,7 +40,7 @@ class EnvironmentConfigurationTest {
         val actual = sut + otherConfiguration
 
         // then
-        assertThat(actual.emailSender).isEqualTo(otherSender)
+        actual.emailSender shouldBe otherSender
     }
 
     @Test
@@ -51,6 +53,6 @@ class EnvironmentConfigurationTest {
         val actual = sut + otherConfiguration
 
         // then
-        assertThat(actual.emailSender).isNull()
+        actual.emailSender should beNull()
     }
 }

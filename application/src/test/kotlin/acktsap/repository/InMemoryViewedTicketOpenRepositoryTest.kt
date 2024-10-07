@@ -5,13 +5,14 @@ import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMe
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
-import org.assertj.core.api.Assertions.assertThat
+import io.kotest.inspectors.shouldForAll
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import java.util.function.Consumer
 
 class InMemoryViewedTicketOpenRepositoryTest {
     private val fixtureMonkey =
-        FixtureMonkey.builder()
+        FixtureMonkey
+            .builder()
             .plugin(KotlinPlugin())
             .build()
 
@@ -26,7 +27,7 @@ class InMemoryViewedTicketOpenRepositoryTest {
         val actual = sut.exists(ticketOpen)
 
         // then
-        assertThat(actual).isTrue()
+        actual shouldBe true
     }
 
     @Test
@@ -39,7 +40,7 @@ class InMemoryViewedTicketOpenRepositoryTest {
         val actual = sut.exists(ticketOpen)
 
         // then
-        assertThat(actual).isFalse()
+        actual shouldBe false
     }
 
     @Test
@@ -54,15 +55,7 @@ class InMemoryViewedTicketOpenRepositoryTest {
         }
 
         // then
-        assertThat(ticketOpens.slice(0..6)).allSatisfy(
-            Consumer {
-                assertThat(sut.exists(it)).isFalse()
-            },
-        )
-        assertThat(ticketOpens.slice(7..9)).allSatisfy(
-            Consumer {
-                assertThat(sut.exists(it)).isTrue()
-            },
-        )
+        ticketOpens.slice(0..6).shouldForAll { sut.exists(it) shouldBe false }
+        ticketOpens.slice(7..9).shouldForAll { sut.exists(it) shouldBe true }
     }
 }

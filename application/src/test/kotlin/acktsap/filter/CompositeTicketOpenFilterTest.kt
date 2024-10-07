@@ -4,9 +4,11 @@ import acktsap.model.TicketOpen
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMe
+import io.kotest.matchers.collections.beEmpty
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class CompositeTicketOpenFilterTest {
@@ -33,7 +35,7 @@ class CompositeTicketOpenFilterTest {
         val actual = sut.doFilter(ticketOpens)
 
         // then
-        assertThat(actual).isEqualTo(targetTicketOpens)
+        actual shouldBe targetTicketOpens
     }
 
     @Test
@@ -53,6 +55,6 @@ class CompositeTicketOpenFilterTest {
         val actual = sut.doFilter(ticketOpens)
 
         // then
-        assertThat(actual).isEmpty()
+        actual should beEmpty()
     }
 }

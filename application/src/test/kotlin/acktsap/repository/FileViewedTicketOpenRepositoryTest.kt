@@ -6,8 +6,8 @@ import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import com.navercorp.fixturemonkey.kotlin.set
+import io.kotest.matchers.shouldBe
 import net.jqwik.api.Arbitraries
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.nio.file.Path
@@ -42,7 +42,7 @@ class FileViewedTicketOpenRepositoryTest {
         val actual = sut.exists(ticketOpen)
 
         // then
-        assertThat(actual).isTrue()
+        actual shouldBe true
     }
 
     @Test
@@ -61,7 +61,7 @@ class FileViewedTicketOpenRepositoryTest {
         val actual = sut.exists(ticketOpen)
 
         // then
-        assertThat(actual).isFalse()
+        actual shouldBe false
     }
 
     @Test
@@ -88,7 +88,7 @@ class FileViewedTicketOpenRepositoryTest {
         val actual = sut.exists(ticketOpen)
 
         // then
-        assertThat(actual).isTrue()
+        actual shouldBe true
     }
 
     @Test
@@ -115,6 +115,6 @@ class FileViewedTicketOpenRepositoryTest {
         val actual = sut.exists(ticketOpen)
 
         // then
-        assertThat(actual).isFalse()
+        actual shouldBe false
     }
 }

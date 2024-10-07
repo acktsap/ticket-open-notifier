@@ -1,6 +1,7 @@
 package acktsap.detector
 
-import org.assertj.core.api.Assertions.assertThat
+import io.kotest.matchers.collections.beEmpty
+import io.kotest.matchers.shouldNot
 import org.junit.jupiter.api.Test
 
 class InterparkTicketOpenDetectorIT {
@@ -13,7 +14,7 @@ class InterparkTicketOpenDetectorIT {
         val actual = sut.detect()
 
         // then
-        assertThat(actual).isNotEmpty
+        actual shouldNot beEmpty()
         actual.forEach { println(it) }
     }
 }
