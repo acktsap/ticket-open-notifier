@@ -4,7 +4,9 @@ import acktsap.model.TicketOpen
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMe
-import org.assertj.core.api.Assertions.assertThat
+import io.kotest.matchers.collections.beEmpty
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import java.util.UUID
 import java.util.concurrent.ThreadLocalRandom
@@ -31,7 +33,7 @@ class NameKeywordsFilterTest {
         val actual = sut.doFilter(ticketOpens)
 
         // then
-        assertThat(actual).isEqualTo(listOf(targetTicketOpen))
+        actual shouldBe listOf(targetTicketOpen)
     }
 
     @Test
@@ -44,6 +46,6 @@ class NameKeywordsFilterTest {
         val actual = sut.doFilter(ticketOpens)
 
         // then
-        assertThat(actual).isEmpty()
+        actual should beEmpty()
     }
 }

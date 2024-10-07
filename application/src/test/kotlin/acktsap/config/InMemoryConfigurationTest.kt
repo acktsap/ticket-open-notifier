@@ -3,9 +3,11 @@ package acktsap.config
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
+import io.kotest.matchers.nulls.beNull
+import io.kotest.matchers.should
+import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 class InMemoryConfigurationTest {
@@ -31,10 +33,10 @@ class InMemoryConfigurationTest {
             )
 
         // when, then
-        assertThat(sut.targetKeywords).isEqualTo(targetKeywords)
-        assertThat(sut.emailSender).isEqualTo(emailSender)
-        assertThat(sut.emailSenderPassword).isEqualTo(emailSenderPassword)
-        assertThat(sut.emailRecipients).isEqualTo(emailRecipients)
+        sut.targetKeywords shouldBe targetKeywords
+        sut.emailSender shouldBe emailSender
+        sut.emailSenderPassword shouldBe emailSenderPassword
+        sut.emailRecipients shouldBe emailRecipients
     }
 
     @Test
@@ -49,7 +51,7 @@ class InMemoryConfigurationTest {
         val actual = sut + secondConfiguration
 
         // then
-        assertThat(actual.emailSender).isEqualTo(firstSender)
+        actual.emailSender shouldBe firstSender
     }
 
     @Test
@@ -63,7 +65,7 @@ class InMemoryConfigurationTest {
         val actual = sut + secondConfiguration
 
         // then
-        assertThat(actual.emailSender).isEqualTo(secondSender)
+        actual.emailSender shouldBe secondSender
     }
 
     @Test
@@ -76,6 +78,6 @@ class InMemoryConfigurationTest {
         val actual = sut + secondConfiguration
 
         // then
-        assertThat(actual.emailSender).isNull()
+        actual.emailSender should beNull()
     }
 }
