@@ -3,8 +3,6 @@ package acktsap.config
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
-import io.kotest.matchers.nulls.beNull
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -20,20 +18,23 @@ class InMemoryConfigurationTest {
     @Test
     fun configurations() {
         // given
-        val targetKeywords = fixtureMonkey.giveMeOne<List<String>?>()
+        val includeKeywords = fixtureMonkey.giveMeOne<List<String>?>()
+        val excludeKeywords = fixtureMonkey.giveMeOne<List<String>?>()
         val emailSender = fixtureMonkey.giveMeOne<String>()
         val emailSenderPassword = fixtureMonkey.giveMeOne<String>()
         val emailRecipients = fixtureMonkey.giveMeOne<List<String>?>()
         val sut =
             InMemoryConfiguration(
-                includeKeywords = targetKeywords,
+                includeKeywords = includeKeywords,
+                excludeKeywords = excludeKeywords,
                 emailSender = emailSender,
                 emailSenderPassword = emailSenderPassword,
                 emailRecipients = emailRecipients,
             )
 
         // when, then
-        sut.includeKeywords shouldBe targetKeywords
+        sut.includeKeywords shouldBe includeKeywords
+        sut.excludeKeywords shouldBe excludeKeywords
         sut.emailSender shouldBe emailSender
         sut.emailSenderPassword shouldBe emailSenderPassword
         sut.emailRecipients shouldBe emailRecipients
@@ -78,6 +79,6 @@ class InMemoryConfigurationTest {
         val actual = sut + secondConfiguration
 
         // then
-        actual.emailSender should beNull()
+        actual.emailSender shouldBe null
     }
 }

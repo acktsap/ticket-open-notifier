@@ -3,8 +3,6 @@ package acktsap.config
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
-import io.kotest.matchers.nulls.beNull
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -23,10 +21,11 @@ class EnvironmentConfigurationTest {
         val sut = EnvironmentConfiguration()
 
         // when, then
-        sut.includeKeywords should beNull()
-        sut.emailSender should beNull()
-        sut.emailSenderPassword should beNull()
-        sut.emailRecipients should beNull()
+        sut.includeKeywords shouldBe null
+        sut.excludeKeywords shouldBe null
+        sut.emailSender shouldBe null
+        sut.emailSenderPassword shouldBe null
+        sut.emailRecipients shouldBe null
     }
 
     @Test
@@ -53,6 +52,6 @@ class EnvironmentConfigurationTest {
         val actual = sut + otherConfiguration
 
         // then
-        actual.emailSender should beNull()
+        actual.emailSender shouldBe null
     }
 }

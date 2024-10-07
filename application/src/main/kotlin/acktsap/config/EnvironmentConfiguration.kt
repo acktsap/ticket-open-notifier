@@ -3,7 +3,8 @@ package acktsap.config
 import java.nio.file.Path
 
 class EnvironmentConfiguration : Configuration {
-    override val includeKeywords: List<String>? by lazy { getenv(KEYWORDS)?.split(",") }
+    override val includeKeywords: List<String>? by lazy { getenv(INCLUDE_KEYWORDS)?.split(",") }
+    override val excludeKeywords: List<String>? by lazy { getenv(EXCLUDE_KEYWORDS)?.split(",") }
     override val emailSender: String? by lazy { getenv(EMAIL_SENDER) }
     override val emailSenderPassword: String? by lazy { getenv(EMAIL_PASSWORD) }
     override val emailRecipients: List<String>? by lazy { getenv(EMAIL_RECIPIENTS)?.split(",") }
@@ -19,7 +20,8 @@ class EnvironmentConfiguration : Configuration {
     private fun getenv(key: String): String? = System.getenv(key)
 
     companion object {
-        private const val KEYWORDS = "KEYWORD"
+        private const val INCLUDE_KEYWORDS = "INCLUDE_KEYWORDS"
+        private const val EXCLUDE_KEYWORDS = "EXCLUDE_KEYWORDS"
         private const val EMAIL_SENDER = "EMAIL_SENDER"
         private const val EMAIL_PASSWORD = "EMAIL_PASSWORD"
         private const val EMAIL_RECIPIENTS = "EMAIL_RECIPIENT"

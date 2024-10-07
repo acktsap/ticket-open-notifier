@@ -3,8 +3,6 @@ package acktsap.config
 import com.navercorp.fixturemonkey.FixtureMonkey
 import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
-import io.kotest.matchers.nulls.beNull
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -28,6 +26,22 @@ class CompositeConfigurationTest {
 
         // when
         val actual = sut.includeKeywords
+
+        // then
+        actual shouldBe mockTargetKeywords
+    }
+
+    @Test
+    fun excludeKeywords() {
+        // given
+        val mockTargetKeywords = fixtureMonkey.giveMeOne<List<String>?>()
+        val sut =
+            CompositeConfiguration(
+                mockk<Configuration> { every { excludeKeywords } returns mockTargetKeywords },
+            )
+
+        // when
+        val actual = sut.excludeKeywords
 
         // then
         actual shouldBe mockTargetKeywords
@@ -123,6 +137,6 @@ class CompositeConfigurationTest {
         val actual = sut + secondConfiguration
 
         // then
-        actual.emailSender should beNull()
+        actual.emailSender shouldBe null
     }
 }
