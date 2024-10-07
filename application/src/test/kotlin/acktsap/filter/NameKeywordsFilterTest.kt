@@ -23,7 +23,7 @@ class NameKeywordsFilterTest {
         val targetTicketOpen = ticketOpens.first()
         val sut =
             NameKeywordsFilter(
-                targetTicketOpen.name.substring(ThreadLocalRandom.current().nextInt(0, 10)),
+                targetTicketOpen.name.substring(ThreadLocalRandom.current().nextInt(0, targetTicketOpen.name.length)),
                 UUID.randomUUID().toString(),
             )
 
