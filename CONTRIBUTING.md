@@ -10,6 +10,8 @@ Debug
 
 Info
 
+- IncludeKeywordsFile config
+- ExcludeKeywordsFile config
 - ViewedTicketStorage init/flush
 - ViewedTicketStorage size changes
 - Detected ticket open size
