@@ -14,6 +14,13 @@ class CompositeConfiguration(
             .firstOrNull { it != null }
     }
 
+    override val excludeKeywords: List<String>? by lazy {
+        configurations
+            .asSequence()
+            .map { it.excludeKeywords }
+            .firstOrNull { it != null }
+    }
+
     override val emailSender: String? by lazy {
         configurations
             .asSequence()

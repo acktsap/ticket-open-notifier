@@ -5,6 +5,8 @@ import java.nio.file.Path
 interface Configuration {
     val includeKeywords: List<String>?
 
+    val excludeKeywords: List<String>?
+
     val emailSender: String?
 
     val emailSenderPassword: String?

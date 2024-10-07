@@ -4,6 +4,7 @@ import java.nio.file.Path
 
 class InMemoryConfiguration(
     override val includeKeywords: List<String>? = null,
+    override val excludeKeywords: List<String>? = null,
     override val emailSender: String? = null,
     override val emailSenderPassword: String? = null,
     override val emailRecipients: List<String>? = null,
