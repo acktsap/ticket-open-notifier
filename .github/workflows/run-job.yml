@@ -1,6 +1,5 @@
-name: Run JAR File Daily with Cache
+name: Trigger Daily Job
 
-# Schedule the job to run daily at midnight (UTC)
 on:
   schedule:
     - cron: "0 0 * * *"  # Every day at 00:00 UTC
@@ -11,29 +10,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Set up Java (if required)
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'  # Use the Temurin distribution (AdoptOpenJDK)
-          java-version: '21'       # Specify the version of Java
+          distribution: 'temurin'
+          java-version: '21'
 
-      # Restore cache for visited.txt, skip if not available
       - name: Restore cache for visited.txt
-        id: cache-visited
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v4
+        id: restore-cache
         with:
-          path: visited.txt  # Specify the file to cache
-          key: visited-cache-${{ runner.os }}
+          path: visited.txt
+          key: visited-cache-dummy-key
+          # this is actual key. it finds latest visited.txt file
           restore-keys: |
             visited-cache-${{ runner.os }}-
-        continue-on-error: true  # Continue even if the cache is not found
 
-      # Run the JAR file from the ./bin path (this should read and update visited.txt if it exists)
       - name: Run JAR file
         run: |
           TARGET=$(find bin/ -name "*.jar")
@@ -43,10 +38,10 @@ jobs:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           EMAIL_RECIPIENT:  ${{ secrets.EMAIL_RECIPIENT }}
 
-      # Save updated visited.txt to the cache if it was modified
       - name: Save cache for visited.txt
-        if: ${{ steps.cache-visited.outputs.cache-hit != 'false' && hashFiles('visited.txt') != '' }}
-        uses: actions/cache@v3
+        uses: actions/cache/save@v4
+        # save if file is changed or not exists
+        if: ${{ steps.restore-cache.outputs.cache-matched-key != format('visited-cache-{0}-{1}', runner.os, hashFiles('visited.txt')) }}
         with:
           path: visited.txt
           key: visited-cache-${{ runner.os }}-${{ hashFiles('visited.txt') }}  # Save new cache based on file hash
