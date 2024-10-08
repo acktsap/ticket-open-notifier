@@ -35,10 +35,14 @@ fun main(args: Array<String>) {
 }
 
 private fun baseConfiguration(): Configuration {
+    val parentDirectory = Path(Configuration::class.java.protectionDomain.codeSource.location.path).parent
+    val includeKeywordFile = parentDirectory.resolve(INCLUDE_KEYWORD_FILE)
+    val excludeKeywordFile = parentDirectory.resolve(EXCLUDE_KEYWORD_FILE)
+
     val fileBasedConfiguration =
         FileBasedConfiguration(
-            includeKeywordsFile = Path(INCLUDE_KEYWORD_FILE),
-            excludeKeywordsFile = Path(EXCLUDE_KEYWORD_FILE),
+            includeKeywordsFile = includeKeywordFile,
+            excludeKeywordsFile = excludeKeywordFile,
         )
     val environmentConfiguration = EnvironmentConfiguration()
     return fileBasedConfiguration + environmentConfiguration
