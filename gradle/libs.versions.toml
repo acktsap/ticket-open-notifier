@@ -22,7 +22,7 @@ selenium = { module = "org.seleniumhq.selenium:selenium-java", version.ref = "se
 email-api = { module = "jakarta.mail:jakarta.mail-api", version.ref = "emailApi" }
 email-implementation = { module = "org.eclipse.angus:angus-mail", version.ref = "emailApiImplementation" }
 logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlinLogging" }
-slf4j = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "slf4j" }
+slf4j = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 logging-implementation = { module = "org.apache.logging.log4j:log4j-slf4j2-impl", version.ref = "loggingImplementation" }
 
 ### test
