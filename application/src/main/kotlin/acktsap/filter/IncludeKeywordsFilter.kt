@@ -8,7 +8,7 @@ private val logger = KotlinLogging.logger { }
 class IncludeKeywordsFilter(
     vararg keywords: String,
 ) : TicketOpenFilter {
-    private val keywords: List<String> = keywords.toList()
+    private val keywords: Set<String> = keywords.toSet()
 
     override fun doFilter(ticketOpens: List<TicketOpen>): List<TicketOpen> {
         val filtered =
