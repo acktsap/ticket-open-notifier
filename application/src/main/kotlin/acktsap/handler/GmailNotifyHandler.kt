@@ -35,7 +35,6 @@ class GmailNotifyHandler(
     }
 
     internal fun buildContent(ticketOpens: Collection<TicketOpen>): String {
-        ticketOpens.first().dateTime.toString()
         return ticketOpens
             .sortedBy { it.dateTime }
             .joinToString(separator = "\n\n") {
