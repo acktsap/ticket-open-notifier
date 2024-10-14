@@ -24,15 +24,24 @@ class GmailNotifyHandler(
             return
         }
 
-        val title = "티켓 오픈 알람 (${ticketOpens.size}개)"
-        val content =
-            ticketOpens
-                .sortedBy { it.dateTime }
-                .joinToString(separator = "\n") {
-                    "${it.dateTime} ${it.name} ${it.platform}"
-                }
+        val title = buildTitle(ticketOpens)
+        val content = buildContent(ticketOpens)
         sendEmail(title, content)
         logger.info { "Success to make email notification" }
+    }
+
+    private fun buildTitle(ticketOpens: Collection<TicketOpen>): String {
+        return "티켓 오픈 알람 (${ticketOpens.size}개)"
+    }
+
+    internal fun buildContent(ticketOpens: Collection<TicketOpen>): String {
+        ticketOpens.first().dateTime.toString()
+        return ticketOpens
+            .sortedBy { it.dateTime }
+            .joinToString(separator = "\n\n") {
+                val dateTime = "${it.dateTime.toLocalDate()} ${it.dateTime.toLocalTime()}"
+                "$dateTime\n${it.name} ${it.platform}"
+            }
     }
 
     private fun sendEmail(
