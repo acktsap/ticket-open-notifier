@@ -46,7 +46,7 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
     companion object {
         @Suppress("ktlint:standard:max-line-length")
         private const val URL =
-            "https://ticket.interpark.com/webzine/paper/TPNoticeList_iFrame.asp?bbsno=34&pageno=1&KindOfGoods=TICKET&Genre=1&sort=opendate&stext="
+            "https://ticket.interpark.com/webzine/paper/TPNoticeList_iFrame.asp?bbsno=34&pageno=1&KindOfGoods=TICKET&Genre=1&sort=WriteDate&stext="
 
         // format : 24.09.25(수) 14:00
         private val DATE_FORMAT = DateTimeFormatter.ofPattern("yy.MM.dd(EEE) HH:mm", Locale.KOREAN)
