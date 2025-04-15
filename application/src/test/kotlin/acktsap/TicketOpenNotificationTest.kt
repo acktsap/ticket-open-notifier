@@ -4,8 +4,6 @@ import acktsap.detector.TicketOpenDetector
 import acktsap.filter.TicketOpenFilter
 import acktsap.handler.TicketOpenHandler
 import acktsap.model.TicketOpen
-import com.navercorp.fixturemonkey.FixtureMonkey
-import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMe
 import io.mockk.every
 import io.mockk.mockk
@@ -13,15 +11,8 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 
 class TicketOpenNotificationTest {
-    private val fixtureMonkey =
-        FixtureMonkey
-            .builder()
-            .plugin(KotlinPlugin())
-            .build()
-
     @Test
-    fun run() {
-        // given
+    fun runShouldInvokeHandleWhenItIsDetectedAndNotFilteredOut() {
         val ticketOpens = fixtureMonkey.giveMe<TicketOpen>(10)
         val ticketOpenDetector =
             mockk<TicketOpenDetector>(relaxed = true) {
@@ -40,10 +31,8 @@ class TicketOpenNotificationTest {
                 ticketOpenHandler = ticketOpenHandler,
             )
 
-        // when
         ticketOpenNotification.run()
 
-        // then
         verify(exactly = 1) { ticketOpenHandler.handle(targetTicketOpens) }
     }
 }

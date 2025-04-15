@@ -1,23 +1,15 @@
 package acktsap.handler
 
+import acktsap.fixtureMonkey
 import acktsap.model.TicketOpen
-import com.navercorp.fixturemonkey.FixtureMonkey
-import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMe
 import io.mockk.mockk
 import io.mockk.verifyAll
 import org.junit.jupiter.api.Test
 
 class CompositeTicketOpenHandlerTest {
-    private val fixtureMonkey =
-        FixtureMonkey
-            .builder()
-            .plugin(KotlinPlugin())
-            .build()
-
     @Test
-    fun handle() {
-        // given
+    fun handleShouldInvokeHandleForAllDelegates() {
         val ticketOpens = fixtureMonkey.giveMe<TicketOpen>(10)
         val delegates =
             listOf<TicketOpenHandler>(
@@ -29,10 +21,8 @@ class CompositeTicketOpenHandlerTest {
                 *delegates.toTypedArray(),
             )
 
-        // when
         sut.handle(ticketOpens)
 
-        // then
         verifyAll {
             delegates.forEach {
                 it.handle(ticketOpens)
