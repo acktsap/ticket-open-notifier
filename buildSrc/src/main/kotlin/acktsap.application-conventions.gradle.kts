@@ -15,5 +15,5 @@ tasks.register<Copy>("updateBin") {
     into(rootProject.rootDir.resolve("bin"))
 
     // Optionally, include specific files or patterns
-    include("*-all.jar")
+    include("*${version}-all.jar")
 }
