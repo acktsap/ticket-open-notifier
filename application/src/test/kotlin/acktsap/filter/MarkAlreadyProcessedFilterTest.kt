@@ -1,9 +1,8 @@
 package acktsap.filter
 
+import acktsap.fixtureMonkey
 import acktsap.model.TicketOpen
 import acktsap.repository.ViewedTicketOpenRepository
-import com.navercorp.fixturemonkey.FixtureMonkey
-import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMe
 import io.kotest.matchers.collections.beEmpty
 import io.kotest.matchers.should
@@ -13,15 +12,8 @@ import io.mockk.mockk
 import org.junit.jupiter.api.Test
 
 class MarkAlreadyProcessedFilterTest {
-    private val fixtureMonkey =
-        FixtureMonkey
-            .builder()
-            .plugin(KotlinPlugin())
-            .build()
-
     @Test
-    fun doFilter_repositoryReturnFalseOnTarget_returnTarget() {
-        // given
+    fun doFilterShouldReturnTargetWhichIsNotFilteredOutByExistsMethod() {
         val ticketOpens = fixtureMonkey.giveMe<TicketOpen>(10)
         val targetTicketOpen = ticketOpens.random()
         val ticketOpenRepository =
@@ -31,16 +23,13 @@ class MarkAlreadyProcessedFilterTest {
             }
         val sut = MarkAlreadyProcessedFilter(ticketOpenRepository)
 
-        // when
         val actual = sut.doFilter(ticketOpens)
 
-        // then
         actual shouldBe listOf(targetTicketOpen)
     }
 
     @Test
-    fun doFilter_repositoryReturnTrueForAll_returnEmpty() {
-        // given
+    fun doFilterShouldReturnEmptyWhenAllItemsAreFilteredOutByExistsMethod() {
         val ticketOpens = fixtureMonkey.giveMe<TicketOpen>(10)
         val ticketOpenRepository =
             mockk<ViewedTicketOpenRepository> {
@@ -48,10 +37,8 @@ class MarkAlreadyProcessedFilterTest {
             }
         val sut = MarkAlreadyProcessedFilter(ticketOpenRepository)
 
-        // when
         val actual = sut.doFilter(ticketOpens)
 
-        // then
         actual should beEmpty()
     }
 }

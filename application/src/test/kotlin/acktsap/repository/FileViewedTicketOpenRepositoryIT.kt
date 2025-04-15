@@ -1,8 +1,7 @@
 package acktsap.repository
 
+import acktsap.fixtureMonkey
 import acktsap.model.TicketOpen
-import com.navercorp.fixturemonkey.FixtureMonkey
-import com.navercorp.fixturemonkey.kotlin.KotlinPlugin
 import com.navercorp.fixturemonkey.kotlin.giveMeBuilder
 import com.navercorp.fixturemonkey.kotlin.giveMeOne
 import com.navercorp.fixturemonkey.kotlin.set
@@ -15,19 +14,12 @@ import java.time.LocalDateTime
 import java.util.UUID
 import java.util.concurrent.ThreadLocalRandom
 
-class FileViewedTicketOpenRepositoryTest {
-    private val fixtureMonkey =
-        FixtureMonkey
-            .builder()
-            .plugin(KotlinPlugin())
-            .build()
-
+class FileViewedTicketOpenRepositoryIT {
     @TempDir
     private lateinit var temp: Path
 
     @Test
-    fun save_and_exists() {
-        // given
+    fun existsShouldReturnValueWhenItIsSaved() {
         val keepTicketOpenBeforeToday = ThreadLocalRandom.current().nextLong(2, 100)
         val dateTime =
             LocalDateTime
@@ -37,17 +29,14 @@ class FileViewedTicketOpenRepositoryTest {
         val path = temp.resolve(UUID.randomUUID().toString())
         val sut = FileViewedTicketOpenRepository(path, keepTicketOpenBeforeToday)
 
-        // when
         sut.save(ticketOpen)
         val actual = sut.exists(ticketOpen)
 
-        // then
         actual shouldBe true
     }
 
     @Test
-    fun exists_notSaved_returnFalse() {
-        // given
+    fun existsShouldReturnValueWhenItIsNotSaved() {
         val keepTicketOpenBeforeToday = ThreadLocalRandom.current().nextLong(2, 100)
         val dateTime =
             LocalDateTime
@@ -57,16 +46,13 @@ class FileViewedTicketOpenRepositoryTest {
         val path = temp.resolve(UUID.randomUUID().toString())
         val sut = FileViewedTicketOpenRepository(path, keepTicketOpenBeforeToday)
 
-        // when
         val actual = sut.exists(ticketOpen)
 
-        // then
         actual shouldBe false
     }
 
     @Test
-    fun exists_savedAsFile_returnTrue() {
-        // given
+    fun existsShouldReturnValueWhenItIsSavedAsFileAndReloaded() {
         val keepTicketOpenBeforeToday = ThreadLocalRandom.current().nextLong(1, 100)
         val dateTime =
             LocalDateTime
@@ -84,16 +70,13 @@ class FileViewedTicketOpenRepositoryTest {
         }
         val sut = FileViewedTicketOpenRepository(path, keepTicketOpenBeforeToday)
 
-        // when
         val actual = sut.exists(ticketOpen)
 
-        // then
         actual shouldBe true
     }
 
     @Test
-    fun exists_savedAsFileWithObsolete_returnFalse() {
-        // given
+    fun existsShouldNotReturnValueWhenItIsSavedAsFileButItIsObsoleteAndReloaded() {
         val savedDayBefore = ThreadLocalRandom.current().nextLong(1, 100)
         val dateTime =
             LocalDateTime
@@ -111,10 +94,8 @@ class FileViewedTicketOpenRepositoryTest {
         }
         val sut = FileViewedTicketOpenRepository(path, ThreadLocalRandom.current().nextLong())
 
-        // when
         val actual = sut.exists(ticketOpen)
 
-        // then
         actual shouldBe false
     }
 }

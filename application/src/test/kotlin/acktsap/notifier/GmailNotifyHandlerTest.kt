@@ -15,7 +15,6 @@ class GmailNotifyHandlerTest {
         @Disabled("manual test")
         @Test
         fun buildContent() {
-            // given
             val ticketOpens =
                 listOf(
                     TicketOpen(
@@ -40,16 +39,14 @@ class GmailNotifyHandlerTest {
                         ),
                 )
 
-            // when
             val actual = sut.buildContent(ticketOpens)
 
-            // then (manual check)
+            // (manual check)
             println(actual)
         }
 
         @Test
-        fun handle_empty_doNothing() {
-            // given
+        fun handleShouldDoNothingWhenRecipientIsEmpty() {
             val ticketOpens = listOf<TicketOpen>()
             val sut =
                 GmailNotifyHandler(
@@ -58,11 +55,7 @@ class GmailNotifyHandlerTest {
                     recipients = listOf(),
                 )
 
-            // when
             sut.handle(ticketOpens)
-
-            // then
-            // do nothing
         }
     }
 
@@ -71,7 +64,6 @@ class GmailNotifyHandlerTest {
         @Disabled("Manual test")
         @Test
         fun handle() {
-            // given
             val ticketOpens =
                 listOf(
                     TicketOpen(
@@ -96,10 +88,8 @@ class GmailNotifyHandlerTest {
                         ),
                 )
 
-            // when
             sut.handle(ticketOpens)
 
-            // then
             // check if sent to your mail
         }
     }
