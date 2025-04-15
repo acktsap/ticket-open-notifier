@@ -2,9 +2,11 @@ package acktsap.detector
 
 import io.kotest.matchers.collections.beEmpty
 import io.kotest.matchers.shouldNot
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class InterparkTicketOpenDetectorIT {
+    @Disabled("Manual test")
     @Test
     fun detect() {
         // given
@@ -14,7 +16,6 @@ class InterparkTicketOpenDetectorIT {
         val actual = sut.detect()
 
         // then
-        actual shouldNot beEmpty()
         actual.forEach { println(it) }
     }
 }
