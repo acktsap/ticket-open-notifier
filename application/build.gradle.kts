@@ -13,11 +13,10 @@ dependencies {
     implementation(libs.selenium)
     implementation(libs.email.api)
     implementation(libs.email.implementation)
-    implementation(libs.logging)
+    implementation(libs.kotlin.logging)
+    implementation(libs.slf4j)
 
-    implementation(libs.bundles.logging)
-    runtimeOnly(libs.logging.implementation)
+    runtimeOnly(libs.log4j)
 
     testImplementation(libs.bundles.test.kotlin)
-    testRuntimeOnly(libs.logging.implementation)
 }

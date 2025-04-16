@@ -6,9 +6,9 @@
 seleinum = "4.24.0"
 emailApi = "2.1.3"
 emailApiImplementation = "2.0.3"
-kotlinLogging = "7.0.0"
-slf4j = "2.0.16"
-loggingImplementation = "2.24.0"
+kotlinLogging = "7.0.7"
+slf4j = "2.0.17" # kotlinLogging needs slf4j at runtime
+log4j = "2.24.3"
 
 ### test
 junit = "5.+"
@@ -21,9 +21,9 @@ fixtureMonkey = "1.0.+"
 selenium = { module = "org.seleniumhq.selenium:selenium-java", version.ref = "seleinum" }
 email-api = { module = "jakarta.mail:jakarta.mail-api", version.ref = "emailApi" }
 email-implementation = { module = "org.eclipse.angus:angus-mail", version.ref = "emailApiImplementation" }
-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlinLogging" }
+kotlin-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlinLogging" }
 slf4j = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
-logging-implementation = { module = "org.apache.logging.log4j:log4j-slf4j2-impl", version.ref = "loggingImplementation" }
+log4j = { module = "org.apache.logging.log4j:log4j-slf4j2-impl", version.ref = "log4j" }
 
 ### test
 junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
@@ -33,5 +33,4 @@ mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 fixturemonkey-kotlin = { module = "com.navercorp.fixturemonkey:fixture-monkey-starter-kotlin", version.ref = "fixtureMonkey" }
 
 [bundles]
-logging = ["logging", "slf4j"]
 test-kotlin = ["junit", "kotest-junit", "kotest-asserttion", "mockk", "fixturemonkey-kotlin"]
