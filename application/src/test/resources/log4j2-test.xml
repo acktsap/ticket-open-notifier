@@ -10,6 +10,6 @@
             <AppenderRef ref="CONSOLE"/>
         </Root>
 
-        <Logger name="acktsap" level="trace"/>
+        <Logger name="acktsap" level="DEBUG"/>
     </Loggers>
 </Configuration>
