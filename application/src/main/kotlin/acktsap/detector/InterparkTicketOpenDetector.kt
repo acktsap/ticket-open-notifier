@@ -31,9 +31,12 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
 
             val typeButtonElement = driver.findElement(By.xpath("//button[text()=\"장르\"]"))
             typeButtonElement.click()
+            waitForJsRefresh()
 
             val musicalTypeButtonElement = driver.findElement(By.xpath("//button[text()=\"뮤지컬\"]"))
             musicalTypeButtonElement.click()
+            waitForJsRefresh()
+
 
             val openListDivElement = driver.findElement(By.xpath("//*[@aria-label=\"상품 리스트\"]"))
             val tickOpenSet = mutableSetOf<TicketOpen>()
@@ -58,8 +61,7 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
                 }
                 lastPosition = currentPosition
 
-                // need to wait for js of target website to be loaded
-                Thread.sleep(100L)
+                waitForJsRefresh()
             }
 
             return tickOpenSet.toList()
@@ -153,6 +155,10 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
             DayOfWeek.SATURDAY -> "토"
             DayOfWeek.SUNDAY -> "일"
         }
+    }
+
+    private fun waitForJsRefresh() {
+        Thread.sleep(100L)
     }
 
     companion object {
