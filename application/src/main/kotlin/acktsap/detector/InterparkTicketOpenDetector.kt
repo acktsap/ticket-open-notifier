@@ -158,7 +158,7 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
     }
 
     private fun waitForJsRefresh() {
-        Thread.sleep(100L)
+        Thread.sleep(300L)
     }
 
     companion object {
