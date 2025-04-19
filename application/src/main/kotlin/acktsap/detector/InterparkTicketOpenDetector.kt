@@ -37,7 +37,6 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
             musicalTypeButtonElement.click()
             waitForJsRefresh()
 
-
             val openListDivElement = driver.findElement(By.xpath("//*[@aria-label=\"상품 리스트\"]"))
             val tickOpenSet = mutableSetOf<TicketOpen>()
             var lastPosition = 0L
