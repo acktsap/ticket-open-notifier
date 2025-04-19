@@ -2,7 +2,7 @@
 
 ## Target
 
-- [인터파크](https://ticket.interpark.com/webzine/paper/TPNoticeList.asp?tid1=in_scroll&tid2=ticketopen&tid3=board_main&tid4=board_main)
+- [인터파크](https://tickets.interpark.com/contents/notice)
 
 ### Prerequisites
 
