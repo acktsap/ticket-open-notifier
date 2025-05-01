@@ -39,7 +39,7 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
 
             val openListDivElement = driver.findElement(By.xpath("//*[@aria-label=\"상품 리스트\"]"))
             val tickOpenSet = mutableSetOf<TicketOpen>()
-            var lastPosition = 0L
+            var lastPosition: Number? = null
             while (true) {
                 val ticketOpenLinkElements = openListDivElement.findElements(By.tagName("a"))
                 logger.trace { "Found ${ticketOpenLinkElements.size} ticket open link elements" }
@@ -52,7 +52,7 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
                 // scroll one page
                 driver.executeScript("window.scrollTo(0, $lastPosition + window.innerHeight);")
 
-                val currentPosition = driver.executeScript("return window.scrollY;") as Long
+                val currentPosition = driver.executeScript("return window.scrollY;") as Number
                 logger.trace { "Page location detection (lastPosition: $lastPosition, currentPosition: $currentPosition)" }
                 if (lastPosition == currentPosition) {
                     logger.trace { "Page is in the bottom. Exit the loop" }
