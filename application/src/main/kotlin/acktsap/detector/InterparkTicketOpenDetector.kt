@@ -157,11 +157,12 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
     }
 
     private fun waitForJsRefresh() {
-        Thread.sleep(500L)
+        Thread.sleep(SLEEP_INTERVAL_MS)
     }
 
     companion object {
         private const val URL = "https://tickets.interpark.com/contents/notice"
+        private const val SLEEP_INTERVAL_MS = 800L
 
         private val TARGET_ZONE_ID = ZoneId.of("Asia/Seoul")
 
