@@ -28,7 +28,7 @@ class FileViewedTicketOpenRepository(
         if (path.exists()) {
             path.bufferedReader().use {
                 it.forEachLine { line ->
-                    logger.trace { "Reading '$line'" }
+                    logger.info { "Reading '$line'" }
                     openedSet.add(deserialize(line))
                 }
             }
