@@ -17,3 +17,6 @@ out/
 
 # direnv
 .envrc
+
+# kotlin
+.kotlin
