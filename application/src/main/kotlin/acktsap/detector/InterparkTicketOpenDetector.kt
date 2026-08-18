@@ -27,6 +27,7 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
             }
         val driver = ChromeDriver(options)
         try {
+            logger.info { "Entering $URL" }
             driver.get(URL)
 
             val typeButtonElement = driver.findElement(By.xpath("//button[text()=\"장르\"]"))
@@ -42,7 +43,7 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
             var lastPosition: Number? = null
             while (true) {
                 val ticketOpenLinkElements = openListDivElement.findElements(By.tagName("a"))
-                logger.trace { "Found ${ticketOpenLinkElements.size} ticket open link elements" }
+                logger.info { "Found ${ticketOpenLinkElements.size} ticket open link elements" }
 
                 val tickOpens =
                     ticketOpenLinkElements
@@ -53,9 +54,9 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
                 driver.executeScript("window.scrollTo(0, $lastPosition + window.innerHeight);")
 
                 val currentPosition = driver.executeScript("return window.scrollY;") as Number
-                logger.trace { "Page location detection (lastPosition: $lastPosition, currentPosition: $currentPosition)" }
+                logger.info { "Page location detection (lastPosition: $lastPosition, currentPosition: $currentPosition)" }
                 if (lastPosition == currentPosition) {
-                    logger.trace { "Page is in the bottom. Exit the loop" }
+                    logger.info { "Page is in the bottom. Exit the loop" }
                     break
                 }
                 lastPosition = currentPosition
