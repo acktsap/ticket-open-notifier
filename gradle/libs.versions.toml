@@ -11,10 +11,10 @@ slf4j = "2.0.17" # kotlinLogging needs slf4j at runtime
 log4j = "2.24.3"
 
 ### test
-junit = "5.+"
-kotest = "5.9.+"
-mockk = "1.+"
-fixtureMonkey = "1.0.+"
+junit = "5.10.3"
+kotest = "5.9.1"
+mockk = "1.13.12"
+fixtureMonkey = "1.0.29"
 
 [libraries]
 ### main
