@@ -13,7 +13,7 @@ log4j = "2.26.1"
 ### test
 junit = "5.10.3"
 kotest = "5.9.1"
-mockk = "1.13.12"
+mockk = "1.14.11"
 fixtureMonkey = "1.0.29"
 
 [libraries]
