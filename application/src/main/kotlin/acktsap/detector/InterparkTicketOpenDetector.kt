@@ -7,7 +7,9 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.chrome.ChromeOptions
+import org.openqa.selenium.support.ui.WebDriverWait
 import java.time.DayOfWeek
+import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -24,46 +26,68 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
                 // headless option
                 // comment out if you want to show behavior
                 addArguments("--headless=new")
+                addArguments("--disable-blink-features=AutomationControlled")
+                addArguments("--window-size=1920,1080")
+                addArguments(USER_AGENT)
             }
         val driver = ChromeDriver(options)
         try {
             logger.info { "Entering $URL" }
             driver.get(URL)
 
-            val typeButtonElement = driver.findElement(By.xpath("//button[text()=\"장르\"]"))
-            typeButtonElement.click()
+            val wait = WebDriverWait(driver, Duration.ofSeconds(10))
+
+            // 장르 필터 버튼 클릭
+            val genreButton =
+                wait.until {
+                    val btns = driver.findElements(By.xpath("//button[contains(., '장르')]"))
+                    btns.firstOrNull { it.isDisplayed }
+                } ?: throw IllegalStateException("Cannot find genre button")
+            genreButton.click()
             waitForJsRefresh()
 
-            val musicalTypeButtonElement = driver.findElement(By.xpath("//button[text()=\"뮤지컬\"]"))
-            musicalTypeButtonElement.click()
+            // 팝업 모달/바텀시트(role='dialog')에서 '뮤지컬' 선택
+            val musicalButton =
+                wait.until {
+                    val btns = driver.findElements(By.xpath("//div[@role='dialog']//button[contains(., '뮤지컬')]"))
+                    btns.firstOrNull { it.isDisplayed }
+                } ?: throw IllegalStateException("Cannot find musical button")
+            musicalButton.click()
             waitForJsRefresh()
 
-            val openListDivElement = driver.findElement(By.xpath("//*[@aria-label=\"상품 리스트\"]"))
             val tickOpenSet = mutableSetOf<TicketOpen>()
-            var lastPosition: Number? = null
-            while (true) {
-                val ticketOpenLinkElements = openListDivElement.findElements(By.tagName("a"))
-                logger.info { "Found ${ticketOpenLinkElements.size} ticket open link elements" }
+            var lastCount = 0
+            var noNewCount = 0
+            while (noNewCount < 3) {
+                val ticketCards =
+                    driver.findElements(
+                        By.xpath(
+                            "//a[contains(@href, '/ticket/products/') " +
+                                "and not(ancestor::*[contains(@class, 'swiper-slide')]) " +
+                                "and not(ancestor::*[contains(@class, 'pc-carousel')])]",
+                        ),
+                    )
 
-                val tickOpens =
-                    ticketOpenLinkElements
-                        .mapNotNull { extractTickOpen(it) }
-                tickOpenSet.addAll(tickOpens)
-
-                // scroll one page
-                driver.executeScript("window.scrollTo(0, $lastPosition + window.innerHeight);")
-
-                val currentPosition = driver.executeScript("return window.scrollY;") as Number
-                logger.info { "Page location detection (lastPosition: $lastPosition, currentPosition: $currentPosition)" }
-                if (lastPosition == currentPosition) {
-                    logger.info { "Page is in the bottom. Exit the loop" }
-                    break
+                for (card in ticketCards) {
+                    if (!card.isDisplayed) continue
+                    val ticketOpen = extractTickOpen(card)
+                    if (ticketOpen != null) {
+                        tickOpenSet.add(ticketOpen)
+                    }
                 }
-                lastPosition = currentPosition
 
+                if (tickOpenSet.size == lastCount) {
+                    noNewCount++
+                } else {
+                    noNewCount = 0
+                    lastCount = tickOpenSet.size
+                }
+
+                driver.executeScript("window.scrollBy(0, window.innerHeight * 1.5);")
                 waitForJsRefresh()
             }
 
+            logger.info { "Found ${tickOpenSet.size} ticket open elements" }
             return tickOpenSet.toList()
         } catch (e: Exception) {
             throw IllegalStateException(e)
@@ -72,16 +96,15 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
         }
     }
 
-    private fun extractTickOpen(openListDivElement: WebElement): TicketOpen? {
-        val unorderedListElement = openListDivElement.findElement(By.tagName("ul"))
-
-        val listItemElements = unorderedListElement.findElements(By.tagName("li"))
-        val (ticketOpenTimeElement, targetElement) = listItemElements
-        val ticketOpenTime = ticketOpenTimeElement.text
-        val target = targetElement.text
-        logger.trace { "Parsing result (ticketOpenTime: $ticketOpenTime, target: $target)" }
-
+    private fun extractTickOpen(cardElement: WebElement): TicketOpen? {
         return try {
+            val ticketOpenTime = cardElement.findElement(By.xpath(".//span[contains(@class, 'c_semantic.text.primaryMain')]")).text.trim()
+            val target = cardElement.findElement(By.xpath(".//p[contains(@class, 'c_semantic.text.neutralMain')]")).text.trim()
+            if (ticketOpenTime.isEmpty() || target.isEmpty()) {
+                return null
+            }
+            logger.trace { "Parsing result (ticketOpenTime: $ticketOpenTime, target: $target)" }
+
             val formattedOpenTime =
                 when {
                     ticketOpenTime.startsWith("오늘 ") -> formatTodayOpenTime(ticketOpenTime.removePrefix("오늘 "))
@@ -96,7 +119,10 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
                 dateTime = parsedLocalDate,
             )
         } catch (e: DateTimeParseException) {
-            logger.trace(e) { "Failed to parse $ticketOpenTime (expected format: $DATE_FORMAT)" }
+            logger.trace(e) { "Failed to parse ticket open time (expected format: $DATE_FORMAT)" }
+            null
+        } catch (e: Exception) {
+            logger.trace(e) { "Failed to parse ticket open card" }
             null
         }
     }
@@ -162,8 +188,12 @@ class InterparkTicketOpenDetector : TicketOpenDetector {
     }
 
     companion object {
-        private const val URL = "https://tickets.interpark.com/contents/notice"
-        private const val SLEEP_INTERVAL_MS = 800L
+        private const val URL = "https://nol.yanolja.com/ticket/display/upcoming"
+        private const val SLEEP_INTERVAL_MS = 1000L
+
+        private const val USER_AGENT =
+            "user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " +
+                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
 
         private val TARGET_ZONE_ID = ZoneId.of("Asia/Seoul")
 

@@ -11,6 +11,8 @@ class InterparkTicketOpenDetectorIT {
 
         val actual = sut.detect()
 
-        actual.forEach { println(it) }
+        println("Detected ${actual.size} tickets:")
+        actual.forEach { println(" - $it") }
+        assert(actual.isNotEmpty())
     }
 }
