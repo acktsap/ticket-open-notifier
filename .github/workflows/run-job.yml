@@ -20,7 +20,7 @@ jobs:
           java-version: '21'
 
       - name: Restore cache for visited.txt
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v6
         id: restore-cache
         with:
           path: visited.txt
@@ -39,7 +39,7 @@ jobs:
           EMAIL_RECIPIENT:  ${{ secrets.EMAIL_RECIPIENT }}
 
       - name: Save cache for visited.txt
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v6
         # save if file is changed or not exists
         if: ${{ steps.restore-cache.outputs.cache-matched-key != format('visited-cache-{0}-{1}', runner.os, hashFiles('visited.txt')) }}
         with:
