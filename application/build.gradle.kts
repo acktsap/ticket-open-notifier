@@ -5,8 +5,7 @@ plugins {
 }
 
 application {
-    // Define the main class for the application.
-    mainClass = "acktsap.TicketOpenNotificationApplicationKt"
+    mainClass = "acktsap.MainKt"
 }
 
 dependencies {
@@ -15,6 +14,7 @@ dependencies {
     implementation(libs.email.implementation)
     implementation(libs.kotlin.logging)
     implementation(libs.slf4j)
+    implementation(libs.immutable)
 
     runtimeOnly(libs.log4j)
 

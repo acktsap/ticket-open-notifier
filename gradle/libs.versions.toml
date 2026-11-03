@@ -9,12 +9,10 @@ emailApiImplementation = "2.0.3"
 kotlinLogging = "8.0.4"
 slf4j = "2.0.17" # kotlinLogging needs slf4j at runtime
 log4j = "2.26.1"
+immutable = "0.4.0"
 
 ### test
-junit = "5.10.3"
 kotest = "5.9.1"
-mockk = "1.13.12"
-fixtureMonkey = "1.0.29"
 
 [libraries]
 ### main
@@ -25,12 +23,12 @@ kotlin-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = 
 slf4j = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 log4j = { module = "org.apache.logging.log4j:log4j-slf4j2-impl", version.ref = "log4j" }
 
+immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "immutable" }
+
 ### test
-junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
 kotest-junit = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotest-asserttion = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
-mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
-fixturemonkey-kotlin = { module = "com.navercorp.fixturemonkey:fixture-monkey-starter-kotlin", version.ref = "fixtureMonkey" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
 
 [bundles]
-test-kotlin = ["junit", "kotest-junit", "kotest-asserttion", "mockk", "fixturemonkey-kotlin"]
+test-kotlin = ["kotest-junit", "kotest-asserttion", "kotest-property"]
