@@ -15,6 +15,7 @@ dependencies {
     implementation(libs.email.implementation)
     implementation(libs.kotlin.logging)
     implementation(libs.slf4j)
+    implementation(libs.commons.csv)
 
     runtimeOnly(libs.log4j)
 
