@@ -18,6 +18,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
+          cache: 'gradle'
+
+      - name: Build JAR file
+        run: ./gradlew :application:updateBin
 
       - name: Restore cache for visited.txt
         uses: actions/cache/restore@v6
