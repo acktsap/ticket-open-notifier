@@ -76,6 +76,74 @@ class FileViewedTicketOpenRepositoryIT {
     }
 
     @Test
+    fun existsShouldReturnValueWhenNameContainsCommaAndReloaded() {
+        val ticketOpen =
+            fixtureMonkey
+                .giveMeOne<TicketOpen>()
+                .copy(name = "뮤지컬 소현, 새벽을 연 자", dateTime = LocalDateTime.now())
+        val path = temp.resolve(UUID.randomUUID().toString())
+        FileViewedTicketOpenRepository(path, 7).use {
+            it.save(ticketOpen)
+        }
+        val sut = FileViewedTicketOpenRepository(path, 7)
+
+        val actual = sut.exists(ticketOpen)
+
+        actual shouldBe true
+    }
+
+    @Test
+    fun existsShouldReturnValueWhenNameContainsQuoteAndReloaded() {
+        val ticketOpen =
+            fixtureMonkey
+                .giveMeOne<TicketOpen>()
+                .copy(name = "뮤지컬 \"소현\"", dateTime = LocalDateTime.now())
+        val path = temp.resolve(UUID.randomUUID().toString())
+        FileViewedTicketOpenRepository(path, 7).use {
+            it.save(ticketOpen)
+        }
+        val sut = FileViewedTicketOpenRepository(path, 7)
+
+        val actual = sut.exists(ticketOpen)
+
+        actual shouldBe true
+    }
+
+    @Test
+    fun existsShouldReturnValueWhenNameContainsLineFeedAndReloaded() {
+        val ticketOpen =
+            fixtureMonkey
+                .giveMeOne<TicketOpen>()
+                .copy(name = "첫째 줄\n둘째 줄", dateTime = LocalDateTime.now())
+        val path = temp.resolve(UUID.randomUUID().toString())
+        FileViewedTicketOpenRepository(path, 7).use {
+            it.save(ticketOpen)
+        }
+        val sut = FileViewedTicketOpenRepository(path, 7)
+
+        val actual = sut.exists(ticketOpen)
+
+        actual shouldBe true
+    }
+
+    @Test
+    fun existsShouldReturnValueWhenNameContainsCarriageReturnAndLineFeedAndReloaded() {
+        val ticketOpen =
+            fixtureMonkey
+                .giveMeOne<TicketOpen>()
+                .copy(name = "첫째 줄\r\n둘째 줄", dateTime = LocalDateTime.now())
+        val path = temp.resolve(UUID.randomUUID().toString())
+        FileViewedTicketOpenRepository(path, 7).use {
+            it.save(ticketOpen)
+        }
+        val sut = FileViewedTicketOpenRepository(path, 7)
+
+        val actual = sut.exists(ticketOpen)
+
+        actual shouldBe true
+    }
+
+    @Test
     fun existsShouldNotReturnValueWhenItIsSavedAsFileButItIsObsoleteAndReloaded() {
         val savedDayBefore = ThreadLocalRandom.current().nextLong(1, 100)
         val dateTime =

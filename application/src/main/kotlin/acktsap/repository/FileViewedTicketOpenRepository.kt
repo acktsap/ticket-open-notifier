@@ -3,6 +3,8 @@ package acktsap.repository
 import acktsap.model.Platform
 import acktsap.model.TicketOpen
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.apache.commons.csv.CSVFormat
+import org.apache.commons.csv.CSVRecord
 import java.nio.file.Path
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -12,11 +14,7 @@ import kotlin.io.path.exists
 
 private val logger = KotlinLogging.logger { }
 
-/**
- * File format
- *
- * each line : name:platform:dateTime
- */
+/** Stores headerless CSV records in name, platform, dateTime order. */
 class FileViewedTicketOpenRepository(
     private val path: Path,
     private val keepTicketOpenBeforeToday: Long,
@@ -26,10 +24,10 @@ class FileViewedTicketOpenRepository(
     init {
         val openedSet = mutableSetOf<TicketOpen>()
         if (path.exists()) {
-            path.bufferedReader().use {
-                it.forEachLine { line ->
-                    logger.info { "Reading '$line'" }
-                    openedSet.add(deserialize(line))
+            CSVFormat.DEFAULT.parse(path.bufferedReader()).use { parser ->
+                parser.forEach { record ->
+                    logger.info { "Reading '$record'" }
+                    openedSet.add(deserialize(record))
                 }
             }
             logger.info { "Found ${openedSet.size} items from '$path" }
@@ -44,37 +42,28 @@ class FileViewedTicketOpenRepository(
     override fun exists(ticketOpen: TicketOpen): Boolean = openedSet.contains(ticketOpen)
 
     override fun close() {
-        path.bufferedWriter().use {
+        CSVFormat.DEFAULT.print(path.bufferedWriter()).use { printer ->
             val baseDateTime = LocalDateTime.now().minusDays(keepTicketOpenBeforeToday)
             val filtered = openedSet.filter { ticketOpen -> ticketOpen.dateTime.isAfter(baseDateTime) }
             logger.info { "${openedSet.size - filtered.size} items removed as obsolete (baseDateTime: $baseDateTime)" }
             logger.info { "Saving ${filtered.size} items to '$path' (${openedSet.size - filtered.size} items removed as obsolete)" }
             for (ticketOpen in filtered) {
-                val line = serialize(ticketOpen)
-                logger.trace { "Saving '$line'" }
-                it.write("$line\n")
+                logger.trace { "Saving '$ticketOpen'" }
+                printer.printRecord(ticketOpen.name, ticketOpen.platform, DATETIME_FORMATER.format(ticketOpen.dateTime))
             }
         }
     }
 
-    private fun deserialize(line: String): TicketOpen {
-        val (name, rawPlatform, rawDateTime) = line.split(DELIMITER)
+    private fun deserialize(record: CSVRecord): TicketOpen {
+        require(record.size() == 3) { "Expected 3 CSV fields in record ${record.recordNumber}, got ${record.size()}" }
         return TicketOpen(
-            name = name,
-            platform = Platform.valueOf(rawPlatform),
-            dateTime = LocalDateTime.parse(rawDateTime, DATETIME_FORMATER),
+            name = record[0],
+            platform = Platform.valueOf(record[1]),
+            dateTime = LocalDateTime.parse(record[2], DATETIME_FORMATER),
         )
-    }
-
-    private fun serialize(ticketOpen: TicketOpen): String {
-        val name = ticketOpen.name
-        val platform = ticketOpen.platform
-        val dateTime = DATETIME_FORMATER.format(ticketOpen.dateTime)
-        return "$name$DELIMITER$platform$DELIMITER$dateTime"
     }
 
     companion object {
         private val DATETIME_FORMATER = DateTimeFormatter.ISO_LOCAL_DATE_TIME
-        private const val DELIMITER = ","
     }
 }

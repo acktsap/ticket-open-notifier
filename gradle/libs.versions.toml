@@ -9,6 +9,7 @@ emailApiImplementation = "2.0.5"
 kotlinLogging = "8.0.4"
 slf4j = "2.0.17" # kotlinLogging needs slf4j at runtime
 log4j = "2.26.1"
+commonsCsv = "1.14.1"
 
 ### test
 junit = "5.10.3"
@@ -24,6 +25,8 @@ email-implementation = { module = "org.eclipse.angus:angus-mail", version.ref = 
 kotlin-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlinLogging" }
 slf4j = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
 log4j = { module = "org.apache.logging.log4j:log4j-slf4j2-impl", version.ref = "log4j" }
+
+commons-csv = { module = "org.apache.commons:commons-csv", version.ref = "commonsCsv" }
 
 ### test
 junit = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit" }
