@@ -12,5 +12,5 @@ dependencies {
     // see also (compatibility matrix) : https://docs.gradle.org/current/userguide/compatibility.html
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.10")
     implementation("org.jlleitschuh.gradle.ktlint:org.jlleitschuh.gradle.ktlint.gradle.plugin:12.1.1")
-    implementation("com.gradleup.shadow:shadow-gradle-plugin:8.3.1")
+    implementation("com.gradleup.shadow:shadow-gradle-plugin:9.6.1")
 }
